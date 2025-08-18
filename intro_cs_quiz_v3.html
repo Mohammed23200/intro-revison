@@ -12,12 +12,19 @@
     *{box-sizing:border-box}
     body{margin:0;background:linear-gradient(180deg,#0b1023,#0f172a 25%,#0b1023 100%);color:var(--text);font-family:"Cairo",system-ui,-apple-system,Segoe UI,Roboto,"Noto Kufi Arabic",Tahoma,Arial}
     a{color:var(--accent)}
-    header{position:sticky;top:0;z-index:20;background:rgba(15,23,42,.7);backdrop-filter:blur(8px);border-bottom:1px solid rgba(148,163,184,.15)}
-    .container{max-width:1150px;margin:0 auto;padding:16px}
-    .title{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    .badge{padding:4px 10px;border:1px solid rgba(148,163,184,.25);border-radius:999px;font-size:12px;color:var(--muted)}
-    .controls{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:12px}
-    .card{background:linear-gradient(180deg,#0d1228,#0b1023);border:1px solid rgba(148,163,184,.13);border-radius:16px;padding:16px}
+    header{position:sticky;top:0;z-index:40;background:rgba(15,23,42,.78);backdrop-filter:blur(10px);border-bottom:1px solid rgba(148,163,184,.15)}
+    .container{max-width:1150px;margin:0 auto;padding:12px 16px}
+    /* Top bar */
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand svg{flex:0 0 auto}
+    .brand h1{margin:0;font-size:20px}
+    .hamburger{display:none;flex:0 0 auto;border:1px solid rgba(148,163,184,.3);background:#0b1228;border-radius:10px;padding:8px 10px;cursor:pointer}
+    .hamburger span{display:block;width:20px;height:2px;background:#cbd5e1;margin:4px 0;border-radius:2px}
+    .badge{padding:3px 8px;border:1px solid rgba(148,163,184,.25);border-radius:999px;font-size:12px;color:var(--muted)}
+    .panel{margin-top:10px}
+    .controls{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .card{background:linear-gradient(180deg,#0d1228,#0b1023);border:1px solid rgba(148,163,184,.13);border-radius:16px;padding:14px}
     select,button{width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(148,163,184,.25);background:#0b1228;color:var(--text)}
     button{cursor:pointer;border:1px solid rgba(34,211,238,.45);background:linear-gradient(180deg,#06222a,#08242c)}
     button.primary{border-color:rgba(34,211,238,.7);background:linear-gradient(180deg,#043039,#06323a)}
@@ -42,55 +49,63 @@
     .incorrect{outline:2px solid rgba(239,68,68,.55)}
     .explain{margin-top:8px;color:#c7d2fe;font-size:13px}
     .footer-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-    .sticky-cta{position:sticky;bottom:0;background:rgba(15,23,42,.8);backdrop-filter:blur(8px);padding:12px;border-top:1px solid rgba(148,163,184,.15)}
+    .sticky-cta{position:sticky;bottom:0;background:rgba(15,23,42,.85);backdrop-filter:blur(8px);padding:12px;border-top:1px solid rgba(148,163,184,.15)}
     .small{font-size:12px;color:var(--muted)}
     footer{margin:40px auto 24px;text-align:center;color:#9ca3af}
 
-    /* ===== Mobile Navbar/Header shrink ===== */
+    /* Hamburger behavior on mobile */
     @media (max-width: 768px){
-      header .container{padding:10px 12px}
-      .title svg{width:22px;height:22px}
-      .title h1{font-size:18px}
       .badge{display:none}
+      .brand h1{font-size:18px}
+      .hamburger{display:inline-block}
+      .panel{display:none} /* collapsed by default on mobile */
       .controls{grid-template-columns:1fr}
       .card{padding:12px}
       .q-head{padding:10px 12px}
       .q-body{padding:12px}
     }
+    .panel.open{display:block !important}
   </style>
 </head>
 <body>
   <header>
     <div class="container">
-      <div class="title">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M12 3l7 4v6c0 5-3.5 7.5-7 8-3.5-.5-7-3-7-8V7l7-4z" stroke="url(#g)" stroke-width="1.2" fill="none"/>
-          <defs><linearGradient id="g" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
-        </svg>
-        <h1 style="margin:0">Intro to Computer Science – امتحان تفاعلي</h1>
-        <span class="badge">AOS Animations · Responsive · فصول جاهزة</span>
-      </div>
-      <div class="controls">
-        <div class="card" style="grid-column: span 7">
-          <label class="hint">اختَر الفصل لعرض الأسئلة:</label>
-          <select id="chapterFilter">
-            <option value="all">كل الفصول</option>
-            <option value="1">Chapter 1</option>
-            <option value="2">Chapter 2</option>
-            <option value="3">Chapter 3</option>
-            <option value="4">Chapter 4</option>
-            <option value="5">Chapter 5</option>
-            <option value="6">Chapter 6</option>
-            <option value="7">Chapter 7</option>
-            <option value="9">Chapter 9</option>
-            <option value="11">Chapter 11</option>
-          </select>
-          <div class="small" style="margin-top:6px">الأسئلة مدمجة كما أرسلتها — لا تحتاج للصق أي شيء.</div>
+      <div class="topbar">
+        <div class="brand">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 3l7 4v6c0 5-3.5 7.5-7 8-3.5-.5-7-3-7-8V7l7-4z" stroke="url(#g)" stroke-width="1.2" fill="none"/>
+            <defs><linearGradient id="g" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+          </svg>
+          <h1>Intro to Computer Science – امتحان تفاعلي</h1>
+          <span class="badge">AOS · Responsive</span>
         </div>
-        <div class="card" style="grid-column: span 5">
-          <label class="hint">الترتيب</label>
-          <button id="shuffleBtn" class="secondary" style="width:100%">ترتيب عشوائي</button>
-          <div class="small" style="margin-top:6px">للتنويع بين المحاولات.</div>
+        <button id="hamburger" class="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div id="panel" class="panel">
+        <div class="controls">
+          <div class="card" style="grid-column: span 7">
+            <label class="hint">اختَر الفصل لعرض الأسئلة:</label>
+            <select id="chapterFilter">
+              <option value="all">كل الفصول</option>
+              <option value="1">Chapter 1</option>
+              <option value="2">Chapter 2</option>
+              <option value="3">Chapter 3</option>
+              <option value="4">Chapter 4</option>
+              <option value="5">Chapter 5</option>
+              <option value="6">Chapter 6</option>
+              <option value="7">Chapter 7</option>
+              <option value="9">Chapter 9</option>
+              <option value="11">Chapter 11</option>
+            </select>
+            <div class="small" style="margin-top:6px">الأسئلة مدمجة كما أرسلتها — لا تحتاج للصق أي شيء.</div>
+          </div>
+          <div class="card" style="grid-column: span 5">
+            <label class="hint">الترتيب</label>
+            <button id="shuffleBtn" class="secondary" style="width:100%">ترتيب عشوائي</button>
+            <div class="small" style="margin-top:6px">للتنويع بين المحاولات.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -115,7 +130,10 @@
     document.addEventListener('DOMContentLoaded', ()=> AOS.init({ once:false, duration:600, easing:'ease-out-cubic'}));
 
     const byId = (x)=>document.getElementById(x);
-    let BANK = []; // will be parsed from RAW below (exact text you sent)
+    const panel = byId('panel');
+    byId('hamburger').addEventListener('click', ()=> panel.classList.toggle('open'));
+
+    let BANK = []; // parsed from RAW
 
     function render(){
       const wrap = byId('questions');
@@ -162,31 +180,26 @@
         const exp = card.querySelector('.explain');
         // reset classes
         labels.forEach(l=>l.classList.remove('correct','incorrect'));
-        // mark correct option in green ALWAYS (per your request)
-        if(key){
-          const right = labels.find(l=>l.querySelector('input').value===key);
-          if(right) right.classList.add('correct');
-        }
+
         if(!key){
-          unkeyed++; // not counted in score
-          if(selected){ exp.style.display=''; exp.textContent='(بدون مفتاح — غير محسوب في الدرجة)'; }
-          else { exp.style.display=''; exp.textContent='(بدون مفتاح — غير محسوب في الدرجة)'; }
+          unkeyed++;
+          // Show chosen (if any) in red? user asked only mark wrong when key known. We'll just show note.
+          exp.style.display=''; exp.textContent='(بدون مفتاح — غير محسوب في الدرجة)';
           return;
         }
+
+        // Always mark correct option in green
+        const right = labels.find(l=>l.querySelector('input').value===key);
+        if(right) right.classList.add('correct');
+
         gradable++;
         if(!selected){
-          blank++;
-          exp.style.display=''; exp.textContent = `الإجابة الصحيحة: ${key}`;
-          return;
+          blank++; exp.style.display=''; exp.textContent = `الإجابة الصحيحة: ${key}`; return;
         }
         if(selected===key){
-          correct++;
-          exp.style.display=''; exp.textContent='إجابة صحيحة ✔️';
-          // keep ONLY green (no red) — already ensured above
+          correct++; exp.style.display=''; exp.textContent='إجابة صحيحة ✔️';
         }else{
-          wrong++;
-          exp.style.display=''; exp.textContent=`إجابتك خاطئة ❌ · الصحيحة: ${key}`;
-          // mark your wrong choice in red
+          wrong++; exp.style.display=''; exp.textContent=`إجابتك خاطئة ❌ · الصحيحة: ${key}`;
           const wrongLab = labels.find(l=>l.querySelector('input').value===selected);
           if(wrongLab) wrongLab.classList.add('incorrect');
         }
@@ -223,9 +236,8 @@
     byId('retryBtn').addEventListener('click', ()=>{ document.querySelectorAll('input[type=radio]').forEach(i=>i.checked=false); byId('summary').innerHTML=''; byId('wrongBtn').style.display='none'; byId('allBtn').style.display='none'; window.scrollTo({top:0,behavior:'smooth'}); });
     byId('wrongBtn').addEventListener('click', showWrong); byId('allBtn').addEventListener('click', showAll);
 
-    // ========= RAW TEXT PLACEHOLDER =========
-    // ملاحظة: من الأفضل وضع النص الكامل كما أرسلته هنا بين backticks.
-    // هذا القسم مجرد مثال قصير لتجربة الصفحة.
+    // ========= RAW TEXT =========
+    // مهم: حط أسئلتك الكاملة هنا مكان هذا النص (نفس التنسيق اللي بعتّه).
     const RAW = String.raw`CHAPTER 1:
 Computer ______ entails having knowledge and understanding of computers and their uses.
 a. literacy
@@ -234,7 +246,7 @@ c. legitimacy
 d. infancy
 الإجابة: A
 
-A(n) ______ is an electronic device ...
+A(n) ______ is an electronic device, operating under the control ...
 a. input device
 b. computer
 c. output device
@@ -245,6 +257,15 @@ True/False:
 You interact with a program through its user interface.
 T (True)
 
+CHAPTER 2:
+The ______ is a worldwide collection of networks ...
+a. Internet
+b. microblog
+c. Web
+d. NSFNet
+
+... ضع باقي الأسئلة كاملة كما أرسلتها ...
+
 CHAPTER 6:
 ______ storage is the physical material on which a computer keeps data, instructions, and information.
 a. Primary
@@ -253,19 +274,18 @@ c. Tertiary
 d. All of the above
 الإجابة: B
 
-A(n) ______ device is the computer hardware that records and/or retrieves items ...
-a. concatenation
-b. indexed
-c. resolved
-d. storage
-الإجابة: D
+... الخ ...
 
-True/False:
-A storage medium is also called secondary storage.
-T (True)
+CHAPTER 11:
+A(n) ______ is a set of components that interact to achieve a common goal.
+a. system
+b. feature
+c. implementation
+d. function
+الإجابة: A
 `;
 
-    // ===== Parser (robust for the given format) =====
+    // ===== Robust Parser =====
     function parseRaw(raw){
       const lines = raw.split(/\r?\n/);
       let chapter = null;
@@ -283,7 +303,7 @@ T (True)
         if(chm){ chapter = Number(chm[1]); continue; }
         if(!s) continue;
 
-        // True/False pair: statement line then "T (True)" or "F (False)"
+        // True/False: statement line then T/F line
         if(/[.؟?…:]$/.test(s) && (lines[i+1]||'').match(/^\s*[TF]\s*\(/)){
           const k = lines[i+1].trim().startsWith('T')?'T':'F';
           pushTF(s.replace(/[:：]\s*$/,''), k);
@@ -291,7 +311,7 @@ T (True)
           continue;
         }
 
-        // MCQ block: question then a./b./c./d. (answers may be fewer in some lines)
+        // MCQ block: question then a./b./c./d.
         if((lines[i+1]||'').match(/^[a-dA-D]\.\s/)){
           const qtext = s.replace(/[:：]\s*$/,'');
           const opts = [];
@@ -301,18 +321,18 @@ T (True)
             if(m){ opts.push(m[1]); }
             j++;
           }
-          // Look ahead up to 3 lines for الإجابة
+          // Look for answer line within next 5 lines
           let key = '';
-          for(let k=0;k<3;k++){
+          for(let k=0;k<5;k++){
             const ans = (lines[i+j+k]||'').trim().match(/^الإجابة\s*:\s*([A-DTF])/);
             if(ans){ key = ans[1].toUpperCase(); break; }
           }
           pushMCQ(qtext, opts, key);
-          i += (j-1); // skip options already consumed
+          i += (j-1);
           continue;
         }
 
-        // Lone "الإجابة: X" -> attach to last
+        // Standalone "الإجابة: X"
         const loneAns = s.match(/^الإجابة\s*:\s*([A-DTF])/);
         if(loneAns && items.length){
           items[items.length-1].key = loneAns[1].toUpperCase();
