@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>انترو تو كمبيوتر ساينس — Chapter 1 Quiz</title>
+  <!-- AOS animate on scroll -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#0b1b3b;
+      --bg-2:#0f2556;
+      --accent:#1e88e5;
+      --accent-2:#64b5f6;
+      --ink:#eaf4ff;
+      --muted:#b9d7ff;
+      --card:#0f1f45;
+      --border:#1d3b7a;
+      --green:#1db954;
+      --green-bg:#0f3d25;
+      --red:#ff5252;
+      --red-bg:#3a0f15;
+      --yellow:#ffca28;
+      --shadow:0 10px 28px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,var(--bg),var(--bg-2));color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Tahoma,Arial;scroll-behavior:smooth}
+    a{color:var(--accent-2);text-decoration:none}
+    a:hover{opacity:.9}
+    .container{max-width:1100px;margin:0 auto;padding:18px}
+    /* NAVBAR */
+    .nav{
+      position:sticky;top:0;z-index:9999;
+      backdrop-filter: blur(10px);
+      background:rgba(7,15,36,.6);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;padding-inline:12px}
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px
+    }
+    .brand .logo{
+      width:28px;height:28px;border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:inline-block;box-shadow:0 2px 10px rgba(30,136,229,.35)
+    }
+    .nav-links{
+      display:flex;gap:14px;align-items:center;
+    }
+    .nav-links a{padding:8px 10px;border-radius:10px}
+    .nav-links a:hover{background:rgba(255,255,255,.07)}
+    /* Hamburger */
+    .hamburger{
+      display:none;cursor:pointer;border:none;background:transparent;padding:8px;border-radius:10px
+    }
+    .hamburger:focus{outline:2px solid var(--accent)}
+    .hamburger span,.hamburger span:before,.hamburger span:after{
+      display:block;width:22px;height:2px;background:var(--ink);position:relative;transition:.25s
+    }
+    .hamburger span:before,.hamburger span:after{content:"";position:absolute;left:0}
+    .hamburger span:before{top:-6px}
+    .hamburger span:after{top:6px}
+    /* Mobile drawer */
+    .drawer{
+      position:fixed;inset:56px 0 auto 0; /* below navbar */
+      background:rgba(7,15,36,.96);border-top:1px solid rgba(255,255,255,.06);
+      transform:translateY(-110%);transition:transform .25s ease;z-index:9998
+    }
+    .drawer.open{transform:translateY(0)}
+    .drawer .drawer-links{display:flex;flex-direction:column;padding:14px 18px;gap:8px}
+    .drawer .drawer-links a{padding:12px;border-radius:12px;background:rgba(255,255,255,.06)}
+    /* HERO */
+    .hero{padding:36px 18px 10px}
+    .hero .title{
+      font-size:clamp(24px,4vw,40px);font-weight:900;line-height:1.1;margin:6px 0;
+      background:linear-gradient(135deg,#fff,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent
+    }
+    .hero .subtitle{color:var(--muted);max-width:800px}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(100,181,246,.18);color:#daf0ff;border:1px solid rgba(100,181,246,.35);
+      padding:8px 12px;border-radius:999px;font-size:13px
+    }
+    .btn{
+      appearance:none;border:none;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;color:#08142c;
+      background:linear-gradient(135deg,#7cc2ff,#1e88e5);box-shadow:0 10px 24px rgba(30,136,229,.35)
+    }
+    .btn:hover{filter:brightness(1.02)}
+    .btn.secondary{background:rgba(255,255,255,.12);color:var(--ink);border:1px solid rgba(255,255,255,.18);box-shadow:none}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    /* SECTIONS */
+    section{padding:10px 0 30px}
+    .card{
+      background:linear-gradient(180deg,var(--card),#0b1b3b);
+      border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px
+    }
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .q-num{font-weight:800;color:var(--muted);margin-inline-end:8px}
+    .q-text{font-weight:700;margin-bottom:12px}
+    .option{
+      display:flex;align-items:flex-start;gap:10px;padding:10px 12px;margin:8px 0;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.03);
+      transition:.2s
+    }
+    .option:hover{background:rgba(255,255,255,.06)}
+    .option input{transform:translateY(3px);accent-color:var(--accent)}
+    /* Result colors */
+    .option.correct{border-color:rgba(29,185,84,.85);background:var(--green-bg)}
+    .option.incorrect{border-color:rgba(255,82,82,.9);background:var(--red-bg)}
+    .option.correct .badge{color:var(--green)}
+    .option.incorrect .badge{color:var(--red)}
+    .badge{font-weight:900;margin-inline-start:auto}
+    .question-card.unanswered{outline:2px dashed var(--yellow);outline-offset:3px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 12px}
+    .muted{color:var(--muted);font-size:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .results{
+      display:none;margin-top:14px;padding:14px;border-radius:14px;
+      background:linear-gradient(180deg,#0f2d62,#0b1b3b);border:1px solid var(--border)
+    }
+    .results.show{display:block}
+    .score{font-weight:900;font-size:18px}
+    .footer{
+      text-align:center;color:var(--muted);padding:30px 12px 60px
+    }
+    .made{margin-top:6px;color:#9fe0ff}
+    /* Responsive */
+    @media (min-width: 720px){
+      .grid{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 860px){
+      .nav-links{display:none}
+      .hamburger{display:block}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand"><span class="logo" aria-hidden="true"></span>انترو تو كمبيوتر ساينس</div>
+      <div class="nav-links" aria-label="روابط">
+        <a href="#mcq">اختياري</a>
+        <a href="#tf">صح/خطأ</a>
+        <a href="#resultBox">النتيجة</a>
+      </div>
+      <button class="hamburger" aria-label="فتح وإغلاق القائمة" aria-expanded="false"><span></span></button>
+    </div>
+    <div class="drawer" id="drawer" aria-hidden="true">
+      <div class="drawer-links">
+        <a href="#mcq" onclick="toggleDrawer(false)">اختياري</a>
+        <a href="#tf" onclick="toggleDrawer(false)">صح/خطأ</a>
+        <a href="#resultBox" onclick="toggleDrawer(false)">النتيجة</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container">
+    <div class="chip" data-aos="fade-down">Chapter 1 — Computers, the Internet & Users</div>
+    <h1 class="title" data-aos="fade-up">اختبار الفصل الأول (40 اختيار من متعدد + 25 صح/خطأ)</h1>
+    <p class="subtitle" data-aos="fade-up" data-aos-delay="80">
+      جاوب وبعدين اضغط <strong>عرض النتيجة</strong>. الصح باللون الأخضر والخطأ باللون الأحمر.
+      شغال بسلاسة على الكمبيوتر والموبايل + زر همبورجر لإظهار/إخفاء الناف بار.
+    </p>
+    <div class="actions" data-aos="fade-up" data-aos-delay="120">
+      <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+      <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="mcq" aria-labelledby="mcq-title">
+      <div class="section-title">
+        <h2 id="mcq-title">الأسئلة الاختيارية (40 سؤال)</h2>
+        <span class="muted">اختر إجابة واحدة لكل سؤال</span>
+      </div>
+      <div class="grid">
+        <!-- 40 MCQ -->
+        <!-- 1 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc1" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">1)</span>Computer ______ entails having knowledge and understanding of computers and their uses.</div>
+          <label class="option"><input type="radio" name="mc1" value="a"> a. literacy <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="b"> b. intimacy <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="c"> c. legitimacy <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="d"> d. infancy <span class="badge"></span></label>
+        </div>
+
+        <!-- 2 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc2" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">2)</span>A(n) ______ is an electronic device, operating under the control of instructions stored in its own memory, that can accept data, process the data according to specified rules, produce results, and store the results for future use.</div>
+          <label class="option"><input type="radio" name="mc2" value="a"> a. input device <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="b"> b. computer <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="c"> c. output device <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="d"> d. both a and c <span class="badge"></span></label>
+        </div>
+
+        <!-- 3 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc3" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">3)</span>A computer contains many electric, electronic, and mechanical components known as ______.</div>
+          <label class="option"><input type="radio" name="mc3" value="a"> a. software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="b"> b. storage media <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="c"> c. output <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="d"> d. hardware <span class="badge"></span></label>
+        </div>
+
+        <!-- 4 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc4" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">4)</span>______ consist(s) of a computer’s electronic components that store instructions waiting to be executed and data needed by those instructions.</div>
+          <label class="option"><input type="radio" name="mc4" value="a"> a. Memory <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="b"> b. Transmission media <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="c"> c. Storage <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="d"> d. Communications media <span class="badge"></span></label>
+        </div>
+
+        <!-- 5 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc5" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">5)</span>A computer keeps data, instructions, and information on ______ media.</div>
+          <label class="option"><input type="radio" name="mc5" value="a"> a. communications <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="b"> b. storage <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="c"> c. reception <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="d"> d. reading <span class="badge"></span></label>
+        </div>
+
+        <!-- 6 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc6" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">6)</span>A(n) ______ is anyone who communicates with a computer or utilizes the information it generates.</div>
+          <label class="option"><input type="radio" name="mc6" value="a"> a. texter <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="b"> b. developer <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="c"> c. user <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="d"> d. decoder <span class="badge"></span></label>
+        </div>
+
+        <!-- 7 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc7" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">7)</span>When a computer connects to a network, such as the one in the accompanying figure, it is ____.</div>
+          <label class="option"><input type="radio" name="mc7" value="a"> a. linked <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="b"> b. inline <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="d"> d. online <span class="badge"></span></label>
+        </div>
+
+        <!-- 8 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc8" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">8)</span>The ____, which is pictured in the accompanying figure, is a worldwide collection of networks that connects millions of businesses, government agencies, educational institutions, and individuals.</div>
+          <label class="option"><input type="radio" name="mc8" value="a"> a. Web <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="c"> c. Internet <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="b"> b. VoIP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="d"> d. cellnet <span class="badge"></span></label>
+        </div>
+
+        <!-- 9 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc9" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">9)</span>The Web contains ____ of documents called Web pages.</div>
+          <label class="option"><input type="radio" name="mc9" value="a"> a. thousands <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="b"> b. millions <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="c"> c. billions <span class="badge"></span></label>
+        </div>
+
+        <!-- 10 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc10" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">10)</span>A Web page can contain ____.</div>
+          <label class="option"><input type="radio" name="mc10" value="a"> a. text and graphics <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="b"> b. audio <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="c"> c. video <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="d"> d. all of the above <span class="badge"></span></label>
+        </div>
+
+        <!-- 11 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc11" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">11)</span>A(n) ______ is an informal Web site consisting of time-stamped articles in a diary or journal format, usually listed in reverse chronological order.</div>
+          <label class="option"><input type="radio" name="mc11" value="a"> a. blog <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="b"> b. podcast <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="c"> c. chat <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="d"> d. videoconference <span class="badge"></span></label>
+        </div>
+
+        <!-- 12 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc12" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">12)</span>A(n) ______ is recorded audio stored on a Web site that can be downloaded to a computer or a portable media player.</div>
+          <label class="option"><input type="radio" name="mc12" value="a"> a. blog <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="b"> b. podcast <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="c"> c. chat <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="d"> d. videoconference <span class="badge"></span></label>
+        </div>
+
+        <!-- 13 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc13" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">13)</span>______ is a series of instructions that tells a computer what to do and how to do it.</div>
+          <label class="option"><input type="radio" name="mc13" value="a"> a. Hardware <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="b"> b. Software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="c"> c. Appware <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="d"> d. A podcast <span class="badge"></span></label>
+        </div>
+
+        <!-- 14 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc14" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">14)</span>With a ______, such as that pictured in the accompanying figure, you interact with the software using text, graphics, and visual images.</div>
+          <label class="option"><input type="radio" name="mc14" value="a"> a. command line interface (CLI) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="b"> b. graphical user interface (GUI) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="c"> c. menu driven interface (MDI) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="d"> d. voice oriented interface (VOI) <span class="badge"></span></label>
+        </div>
+
+        <!-- 15 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc15" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">15)</span>As shown in the accompanying figure, a(n) ____ is a miniature image that represents a program, an instruction, or some other object.</div>
+          <label class="option"><input type="radio" name="mc15" value="a"> a. server <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="b"> b. processor <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="c"> c. icon <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="d"> d. network <span class="badge"></span></label>
+        </div>
+
+        <!-- 16 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc16" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">16)</span>When a user starts a computer, portions of the ____ (of which Microsoft Windows, shown in the accompanying figure, is an example) load into memory from the computer’s hard disk.</div>
+          <label class="option"><input type="radio" name="mc16" value="a"> a. application software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="b"> b. operating system <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="c"> c. graphical user interface (GUI) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="d"> d. podcast <span class="badge"></span></label>
+        </div>
+
+        <!-- 17 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc17" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">17)</span>A(n) ____ system is a set of programs that coordinates all the activities among computer hardware devices.</div>
+          <label class="option"><input type="radio" name="mc17" value="a"> a. operating <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="b"> b. director <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="c"> c. utility <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="d"> d. management <span class="badge"></span></label>
+        </div>
+
+        <!-- 18 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc18" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">18)</span>A(n) ____ program is a type of system software that allows a user to perform maintenance-type tasks usually related to managing a computer, its devices, or its programs.</div>
+          <label class="option"><input type="radio" name="mc18" value="a"> a. embedded <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="b"> b. maintenance <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="c"> c. utility <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="d"> d. server <span class="badge"></span></label>
+        </div>
+
+        <!-- 19 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc19" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">19)</span>____ is the process of setting up software to work with a computer, printer, and other hardware components.</div>
+          <label class="option"><input type="radio" name="mc19" value="a"> a. Installing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="b"> b. Running <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="c"> c. Executing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="d"> d. Entering <span class="badge"></span></label>
+        </div>
+
+        <!-- 20 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc20" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">20)</span>A(n) ____ is someone who develops software or writes the instructions that direct the computer to process data into information.</div>
+          <label class="option"><input type="radio" name="mc20" value="a"> a. director <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="b"> b. program manager <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="c"> c. programmer <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="d"> d. user <span class="badge"></span></label>
+        </div>
+
+        <!-- 21 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc21" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">21)</span>A ____ computer is a computer that can perform all of its input, processing, output, and storage activities by itself.</div>
+          <label class="option"><input type="radio" name="mc21" value="a"> a. mainframe <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="b"> b. personal <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="c"> c. terminal <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="d"> d. mainline <span class="badge"></span></label>
+        </div>
+
+        <!-- 22 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc22" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">22)</span>____ computers usually use a Macintosh operating system (Mac OS X).</div>
+          <label class="option"><input type="radio" name="mc22" value="a"> a. Apple <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="b"> b. PC <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="c"> c. PC-compatible <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="d"> d. All of the above <span class="badge"></span></label>
+        </div>
+
+        <!-- 23 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc23" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">23)</span>A(n) ___ computer, as shown in the accompanying figure, is a portable, personal computer small enough to fit on your lap.</div>
+          <label class="option"><input type="radio" name="mc23" value="a"> a. handtop <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="b"> b. desktop <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="d"> d. notebook <span class="badge"></span></label>
+        </div>
+
+        <!-- 24 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc24" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">24)</span>As shown in the accompanying figure, a(n) ______ device is a computing device small enough to carry in a pocket.</div>
+          <label class="option"><input type="radio" name="mc24" value="a"> a. integrated <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="c"> c. mobile <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="b"> b. desktop <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="d"> d. encapsulated <span class="badge"></span></label>
+        </div>
+
+        <!-- 25 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc25" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">25)</span>Resembling a letter-sized slate, a ______ is a special type of notebook computer you can interact with by touching the screen with your finger or a digital pen.</div>
+          <label class="option"><input type="radio" name="mc25" value="a"> a. mainframe <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="b"> b. Tablet PC <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="c"> c. PPA <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="d"> d. hotspot <span class="badge"></span></label>
+        </div>
+
+        <!-- 26 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc26" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">26)</span>A(n) ______ computer is designed so the system unit, input devices, output devices, and any other devices fit entirely on or under a desk or table.</div>
+          <label class="option"><input type="radio" name="mc26" value="a"> a. desktop <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="b"> b. encapsulated <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="c"> c. mobile <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="d"> d. handheld <span class="badge"></span></label>
+        </div>
+
+        <!-- 27 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc27" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">27)</span>______ are the fastest, most powerful computers — and the most expensive.</div>
+          <label class="option"><input type="radio" name="mc27" value="a"> a. Embedded computers <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="b"> b. Supercomputers <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="c"> c. Mainframes <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="d"> d. Mobiles devices <span class="badge"></span></label>
+        </div>
+
+        <!-- 28 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc28" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">28)</span>A(n) ______ computer is a special-purpose computer that functions as a component in a larger product.</div>
+          <label class="option"><input type="radio" name="mc28" value="a"> a. smart <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="c"> c. embedded <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="b"> b. handheld <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="d"> d. integral <span class="badge"></span></label>
+        </div>
+
+        <!-- 29 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc29" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">29)</span>A(n) ___ includes any company with fewer than 50 employees, as well as the self-employed who work from home.</div>
+          <label class="option"><input type="radio" name="mc29" value="a"> a. small office/home office (SOHO) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="b"> b. home user <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="c"> c. enterprise user <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="d"> d. power user <span class="badge"></span></label>
+        </div>
+
+        <!-- 30 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc30" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">30)</span>An increasing number of employees and students are ___ users, who work on a computer while away from a main office or school.</div>
+          <label class="option"><input type="radio" name="mc30" value="a"> a. enterprise <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="b"> b. SOHO <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="c"> c. mobile <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="d"> d. power <span class="badge"></span></label>
+        </div>
+
+        <!-- 31 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc31" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">31)</span>Examples of power users include all of the following EXCEPT ___.</div>
+          <label class="option"><input type="radio" name="mc31" value="a"> a. sales representatives <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="b"> b. engineers and scientists <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="c"> c. desktop publishers <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="d"> d. architects and graphic artists <span class="badge"></span></label>
+        </div>
+
+        <!-- 32 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc32" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">32)</span>A category of user, called a ___ user, requires the capabilities of a powerful desktop computer, called a workstation.</div>
+          <label class="option"><input type="radio" name="mc32" value="a"> a. power <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="b"> b. mobile <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="c"> c. SOHO <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="d"> d. large business <span class="badge"></span></label>
+        </div>
+
+        <!-- 33 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc33" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">33)</span>Each employee or customer who uses a computer in a large business is a(n) ___ user.</div>
+          <label class="option"><input type="radio" name="mc33" value="a"> a. SOHO <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="b"> b. enterprise <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="c"> c. mobile <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="d"> d. power <span class="badge"></span></label>
+        </div>
+
+        <!-- 34 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc34" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">34)</span>Many large companies use the words, ___ computing, to refer to the huge network of computers that meets their diverse computing needs.</div>
+          <label class="option"><input type="radio" name="mc34" value="a"> a. online <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="b"> b. strategic <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="c"> c. enterprise <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="d"> d. management <span class="badge"></span></label>
+        </div>
+
+        <!-- 35 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc35" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">35)</span>___ is a work arrangement in which employees work away from a company’s standard workplace and often communicate with the office through the computer.</div>
+          <label class="option"><input type="radio" name="mc35" value="a"> a. Telecommuting <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="b"> b. Teleprocessing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="c"> c. Telescoping <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="d"> d. Telephering <span class="badge"></span></label>
+        </div>
+
+        <!-- 36 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc36" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">36)</span>With ____, users access account balances, pay bills, and copy monthly transactions from a bank’s computer right into their own computers.</div>
+          <label class="option"><input type="radio" name="mc36" value="a"> a. online investing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="b"> b. online banking <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="c"> c. neural networks <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="d"> d. All of the above <span class="badge"></span></label>
+        </div>
+
+        <!-- 37 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc37" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">37)</span>People access ____ Web sites to file taxes, apply for permits and licenses, pay parking tickets, buy stamps, report crimes, apply for financial aid, and renew vehicle registrations and driver’s licenses.</div>
+          <label class="option"><input type="radio" name="mc37" value="a"> a. education <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="b"> b. government <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="c"> c. industry <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="d"> d. finance <span class="badge"></span></label>
+        </div>
+
+        <!-- 38 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc38" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">38)</span>Investors often use ____ investing to buy and sell stocks and bonds — without using a broker.</div>
+          <label class="option"><input type="radio" name="mc38" value="a"> a. dynamic <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="b"> b. database-driven <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="d"> d. online <span class="badge"></span></label>
+        </div>
+
+        <!-- 39 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc39" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">39)</span>Through ____, health-care professionals in separate locations conduct live conferences on computers.</div>
+          <label class="option"><input type="radio" name="mc39" value="a"> a. aeromedicine <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="b"> b. holistic medicine <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="c"> c. telemedicine <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="d"> d. nuclear medicine <span class="badge"></span></label>
+        </div>
+
+        <!-- 40 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc40" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">40)</span>____ refers to the use of computers to assist with manufacturing processes such as fabrication and assembly.</div>
+          <label class="option"><input type="radio" name="mc40" value="a"> a. CAD <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="c"> c. CAM <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="b"> b. PCX <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="d"> d. USB <span class="badge"></span></label>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="tf" aria-labelledby="tf-title">
+      <div class="section-title">
+        <h2 id="tf-title">أسئلة الصح والخطأ (25 سؤال)</h2>
+        <span class="muted">اختر (T) صح أو (F) خطأ</span>
+      </div>
+      <div class="grid">
+        <!-- 25 T/F -->
+        <!-- 1 -->
+        <div class="card question-card" data-type="tf" data-qid="tf1" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">1)</span>Computers process output (information) into input (data).</div>
+          <label class="option"><input type="radio" name="tf1" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf1" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 2 -->
+        <div class="card question-card" data-type="tf" data-qid="tf2" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">2)</span>You insert and remove an external hard disk from the computer or a device connected to the computer.</div>
+          <label class="option"><input type="radio" name="tf2" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf2" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 3 -->
+        <div class="card question-card" data-type="tf" data-qid="tf3" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">3)</span>A USB flash drive ... is a portable storage device that can hold about 4 billion characters and is small and lightweight enough to be carried.</div>
+          <label class="option"><input type="radio" name="tf3" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf3" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 4 -->
+        <div class="card question-card" data-type="tf" data-qid="tf4" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">4)</span>A hard disk provides much less storage capacity than a USB flash drive.</div>
+          <label class="option"><input type="radio" name="tf4" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf4" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 5 -->
+        <div class="card question-card" data-type="tf" data-qid="tf5" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">5)</span>A Web page is a collection of related Web sites.</div>
+          <label class="option"><input type="radio" name="tf5" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf5" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 6 -->
+        <div class="card question-card" data-type="tf" data-qid="tf6" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">6)</span>You interact with a program through its user interface.</div>
+          <label class="option"><input type="radio" name="tf6" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf6" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 7 -->
+        <div class="card question-card" data-type="tf" data-qid="tf7" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">7)</span>Application software consists of the programs that control or maintain the operations of the computer and its devices.</div>
+          <label class="option"><input type="radio" name="tf7" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf7" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 8 -->
+        <div class="card question-card" data-type="tf" data-qid="tf8" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">8)</span>When you buy a computer, it usually has some software preinstalled on its hard disk.</div>
+          <label class="option"><input type="radio" name="tf8" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf8" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 9 -->
+        <div class="card question-card" data-type="tf" data-qid="tf9" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">9)</span>Once a program is in memory, the computer can execute its instructions.</div>
+          <label class="option"><input type="radio" name="tf9" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf9" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 10 -->
+        <div class="card question-card" data-type="tf" data-qid="tf10" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">10)</span>A computer’s size, speed, processing power, and price determine its category.</div>
+          <label class="option"><input type="radio" name="tf10" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf10" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 11 -->
+        <div class="card question-card" data-type="tf" data-qid="tf11" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">11)</span>Due to slowly changing technology, the distinction among categories of computers is always clear-cut.</div>
+          <label class="option"><input type="radio" name="tf11" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf11" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 12 -->
+        <div class="card question-card" data-type="tf" data-qid="tf12" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">12)</span>The most popular type of mobile computer is the desktop computer.</div>
+          <label class="option"><input type="radio" name="tf12" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf12" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 13 -->
+        <div class="card question-card" data-type="tf" data-qid="tf13" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">13)</span>You can often connect a device to a personal computer to exchange information.</div>
+          <label class="option"><input type="radio" name="tf13" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf13" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 14 -->
+        <div class="card question-card" data-type="tf" data-qid="tf14" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">14)</span>Mobile devices usually store programs and data permanently in internal memory or memory cards.</div>
+          <label class="option"><input type="radio" name="tf14" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf14" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 15 -->
+        <div class="card question-card" data-type="tf" data-qid="tf15" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">15)</span>A handheld computer is small enough to fit in one hand while you operate it with the other.</div>
+          <label class="option"><input type="radio" name="tf15" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf15" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 16 -->
+        <div class="card question-card" data-type="tf" data-qid="tf16" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">16)</span>With a handheld game console, the controls, screen, and speakers are built into the device.</div>
+          <label class="option"><input type="radio" name="tf16" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf16" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 17 -->
+        <div class="card question-card" data-type="tf" data-qid="tf17" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">17)</span>A server is a handheld Internet-enabled device.</div>
+          <label class="option"><input type="radio" name="tf17" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf17" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 18 -->
+        <div class="card question-card" data-type="tf" data-qid="tf18" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">18)</span>Applications requiring complex, sophisticated mathematical calculations, such as aerospace and automotive design, use desktop computers.</div>
+          <label class="option"><input type="radio" name="tf18" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf18" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 19 -->
+        <div class="card question-card" data-type="tf" data-qid="tf19" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">19)</span>Most major corporations use supercomputers for daily business activities.</div>
+          <label class="option"><input type="radio" name="tf19" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf19" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 20 -->
+        <div class="card question-card" data-type="tf" data-qid="tf20" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">20)</span>SOHO users often have basic business software and other industry-specific software.</div>
+          <label class="option"><input type="radio" name="tf20" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf20" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 21 -->
+        <div class="card question-card" data-type="tf" data-qid="tf21" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">21)</span>The accounting department in a large business uses desktop publishing software to prepare marketing literature.</div>
+          <label class="option"><input type="radio" name="tf21" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf21" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 22 -->
+        <div class="card question-card" data-type="tf" data-qid="tf22" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">22)</span>Employees who telecommute have rigid work schedules and cannot combine work and personal responsibilities.</div>
+          <label class="option"><input type="radio" name="tf22" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf22" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 23 -->
+        <div class="card question-card" data-type="tf" data-qid="tf23" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">23)</span>Students use software to assist with learning or to complete assignments.</div>
+          <label class="option"><input type="radio" name="tf23" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf23" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 24 -->
+        <div class="card question-card" data-type="tf" data-qid="tf24" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">24)</span>With online investing, the transaction fee for each trade is usually much more than when using a broker.</div>
+          <label class="option"><input type="radio" name="tf24" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf24" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 25 -->
+        <div class="card question-card" data-type="tf" data-qid="tf25" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">25)</span>Breakthroughs in surgery, medicine, and treatments seldom result from scientists’ use of computers.</div>
+          <label class="option"><input type="radio" name="tf25" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf25" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+      </div>
+
+      <div class="actions" style="margin-top:18px">
+        <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+        <button class="btn secondary" onclick="resetQuiz()">مسح الاختيارات</button>
+      </div>
+    </section>
+
+    <section id="resultBox" aria-labelledby="res-title">
+      <div class="card" data-aos="fade-up">
+        <div class="section-title">
+          <h2 id="res-title">نتيجتك</h2>
+          <span class="muted">تفاصيل الدرجات بعد التصحيح</span>
+        </div>
+        <div class="results" id="results">
+          <div class="score" id="scoreLine">—</div>
+          <div class="muted" id="detailLine" style="margin-top:6px">—</div>
+          <div class="muted" id="tipLine" style="margin-top:6px">الأسئلة غير المُجابة تظهر بإطار أصفر.</div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn" onclick="scrollToTop()">العودة للأعلى</button>
+            <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div>© Chapter 1 Quiz</div>
+    <div class="made">صُنعت بالحب بواسطة جيمي 💙</div>
+  </footer>
+
+  <!-- AOS + App JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 500, easing: 'ease-out' });
+
+    const drawer = document.getElementById('drawer');
+    const burger = document.querySelector('.hamburger');
+    function toggleDrawer(forceState){
+      const willOpen = (typeof forceState==='boolean') ? forceState : !drawer.classList.contains('open');
+      drawer.classList.toggle('open', willOpen);
+      burger.setAttribute('aria-expanded', String(willOpen));
+      drawer.setAttribute('aria-hidden', String(!willOpen));
+    }
+    burger.addEventListener('click', () => toggleDrawer());
+
+    function clearColors(card){
+      card.classList.remove('unanswered');
+      card.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('correct','incorrect');
+        const badge = opt.querySelector('.badge'); if (badge) badge.textContent = '';
+      });
+    }
+
+    function gradeSection(selector){
+      const cards = Array.from(document.querySelectorAll(selector));
+      let total = cards.length, correct = 0, unanswered = 0;
+      cards.forEach(card => {
+        clearColors(card);
+        const type = card.dataset.type;
+        const qid = card.dataset.qid;
+        const answer = card.dataset.answer; // 'a'/'b'/... or 'T'/'F'
+        const chosen = card.querySelector('input[type="radio"]:checked');
+        if(!chosen){
+          unanswered++;
+          card.classList.add('unanswered');
+          // Also reveal the correct option in green to learn
+          const corrLabel = card.querySelector('input[value="'+answer+'"]')?.closest('.option');
+          if(corrLabel){ corrLabel.classList.add('correct'); corrLabel.querySelector('.badge').textContent = '✓'; }
+          return;
+        }
+        const chosenVal = chosen.value;
+        const chosenLabel = chosen.closest('.option');
+        const correctLabel = card.querySelector('input[value="'+answer+'"]')?.closest('.option');
+        if(chosenVal === answer){
+          correct++;
+          chosenLabel.classList.add('correct');
+          chosenLabel.querySelector('.badge').textContent = '✓';
+        }else{
+          chosenLabel.classList.add('incorrect');
+          chosenLabel.querySelector('.badge').textContent = '✗';
+          if(correctLabel){ correctLabel.classList.add('correct'); correctLabel.querySelector('.badge').textContent = '✓'; }
+        }
+      });
+      return {total, correct, unanswered, wrong: total - correct - unanswered};
+    }
+
+    function gradeAll(){
+      const r1 = gradeSection('#mcq .question-card');
+      const r2 = gradeSection('#tf .question-card');
+      const totalQ = r1.total + r2.total;
+      const correct = r1.correct + r2.correct;
+      const unanswered = r1.unanswered + r2.unanswered;
+      const wrong = totalQ - correct - unanswered;
+      const percent = Math.round((correct/totalQ)*100);
+
+      const results = document.getElementById('results');
+      const scoreLine = document.getElementById('scoreLine');
+      const detailLine = document.getElementById('detailLine');
+      scoreLine.textContent = `الدرجة الكلية: ${correct} / ${totalQ} (${percent}%)`;
+      detailLine.textContent = `اختياري: ${r1.correct}/${r1.total} — صح/خطأ: ${r2.correct}/${r2.total} — أخطاء: ${wrong} — غير مُجاب: ${unanswered}`;
+      results.classList.add('show');
+      document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+    }
+
+    function resetQuiz(){
+      document.querySelectorAll('.question-card').forEach(card => {
+        clearColors(card);
+        card.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      });
+      document.getElementById('results').classList.remove('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+  </script>
+</body>
+</html>
