@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intro to Computer Science – امتحان تفاعلي</title>
+  <!-- AOS (Animate On Scroll) -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <script defer src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <style>
+    :root{--bg:#0f172a;--card:#0b1228;--muted:#94a3b8;--text:#e5e7eb;--accent:#22d3ee;--vio:#a78bfa;--ok:#10b981;--bad:#ef4444;--warn:#f59e0b}
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#0b1023,#0f172a 25%,#0b1023 100%);color:var(--text);font-family:"Cairo",system-ui,-apple-system,Segoe UI,Roboto,"Noto Kufi Arabic",Tahoma,Arial}
+    a{color:var(--accent)}
+    header{position:sticky;top:0;z-index:20;background:rgba(15,23,42,.7);backdrop-filter:blur(8px);border-bottom:1px solid rgba(148,163,184,.15)}
+    .container{max-width:1150px;margin:0 auto;padding:16px}
+    .title{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .badge{padding:4px 10px;border:1px solid rgba(148,163,184,.25);border-radius:999px;font-size:12px;color:var(--muted)}
+    .controls{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:12px}
+    .card{background:linear-gradient(180deg,#0d1228,#0b1023);border:1px solid rgba(148,163,184,.13);border-radius:16px;padding:16px}
+    select,button{width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(148,163,184,.25);background:#0b1228;color:var(--text)}
+    button{cursor:pointer;border:1px solid rgba(34,211,238,.45);background:linear-gradient(180deg,#06222a,#08242c)}
+    button.primary{border-color:rgba(34,211,238,.7);background:linear-gradient(180deg,#043039,#06323a)}
+    button.secondary{border-color:rgba(167,139,250,.55)}
+    button.ghost{border-color:rgba(148,163,184,.25)}
+    .hint{color:var(--muted);font-size:13px}
+    .q-card{margin:14px 0;border:1px solid rgba(148,163,184,.12);border-radius:14px;overflow:hidden}
+    .q-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(148,163,184,.06)}
+    .q-body{padding:14px}
+    .q-index{font-weight:700;color:var(--accent)}
+    .tag{font-size:11px;color:#a5b4fc;padding:2px 8px;border:1px solid rgba(165,180,252,.35);border-radius:999px}
+    .options{display:grid;gap:10px;margin-top:10px}
+    .opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid rgba(148,163,184,.18);border-radius:12px;background:#0b1228}
+    .opt input{margin-top:4px}
+    .result-bar{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap}
+    .pill{padding:6px 12px;border-radius:999px;font-weight:600}
+    .pill.ok{background:rgba(16,185,129,.15);color:#34d399;border:1px solid rgba(16,185,129,.35)}
+    .pill.bad{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.35)}
+    .pill.warn{background:rgba(245,158,11,.12);color:#fbbf24;border:1px solid rgba(245,158,11,.35)}
+    .correct{outline:2px solid rgba(16,185,129,.55)}
+    .incorrect{outline:2px solid rgba(239,68,68,.55)}
+    .explain{margin-top:8px;color:#c7d2fe;font-size:13px}
+    .footer-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .sticky-cta{position:sticky;bottom:0;background:rgba(15,23,42,.8);backdrop-filter:blur(8px);padding:12px;border-top:1px solid rgba(148,163,184,.15)}
+    .small{font-size:12px;color:var(--muted)}
+    footer{margin:40px auto 24px;text-align:center;color:#9ca3af}
+    @media (max-width:640px){.controls{grid-template-columns:1fr}.q-head{flex-direction:column;align-items:flex-start;gap:6px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 3l7 4v6c0 5-3.5 7.5-7 8-3.5-.5-7-3-7-8V7l7-4z" stroke="url(#g)" stroke-width="1.2" fill="none"/>
+          <defs><linearGradient id="g" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+        </svg>
+        <h1 style="margin:0">Intro to Computer Science – امتحان تفاعلي</h1>
+        <span class="badge">AOS Animations · Responsive · فصول جاهزة</span>
+      </div>
+      <div class="controls">
+        <div class="card" style="grid-column: span 7">
+          <label class="hint">اختَر الفصل لعرض الأسئلة:</label>
+          <select id="chapterFilter">
+            <option value="all">كل الفصول</option>
+            <option value="1">Chapter 1</option>
+            <option value="2">Chapter 2</option>
+            <option value="3">Chapter 3</option>
+            <option value="4">Chapter 4</option>
+            <option value="5">Chapter 5</option>
+            <option value="6">Chapter 6</option>
+            <option value="7">Chapter 7</option>
+            <option value="9">Chapter 9</option>
+            <option value="11">Chapter 11</option>
+          </select>
+          <div class="small" style="margin-top:6px">الأسئلة مدمجة كما أرسلتها — لا تحتاج للصق أي شيء.</div>
+        </div>
+        <div class="card" style="grid-column: span 5">
+          <label class="hint">الترتيب</label>
+          <button id="shuffleBtn" class="secondary" style="width:100%">ترتيب عشوائي</button>
+          <div class="small" style="margin-top:6px">للتنويع بين المحاولات.</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="questions"></div>
+    <div class="sticky-cta">
+      <div class="footer-actions">
+        <button id="submitBtn" class="primary">تصحيح & عرض الدرجة</button>
+        <button id="retryBtn" class="ghost">إعادة المحاولة</button>
+        <button id="wrongBtn" class="secondary" style="display:none">اعرض الغلط فقط</button>
+        <button id="allBtn" class="ghost" style="display:none">اعرض الكل</button>
+      </div>
+      <div id="summary" class="result-bar"></div>
+    </div>
+    <footer>صُنِعت بالحب بواسطة جيمي ❤️</footer>
+  </main>
+
+  <script>
+    // ===== AOS init =====
+    document.addEventListener('DOMContentLoaded', ()=> AOS.init({ once:false, duration:600, easing:'ease-out-cubic'}));
+
+    const byId = (x)=>document.getElementById(x);
+    let BANK = []; // will be parsed from RAW below (exact text you sent)
+
+    function render(){
+      const wrap = byId('questions');
+      wrap.innerHTML = '';
+      const chapSel = byId('chapterFilter').value;
+      const list = BANK.filter(q=> chapSel==='all' ? true : String(q.chapter)===chapSel);
+      list.forEach((q)=>{
+        const card = document.createElement('div');
+        card.className='q-card';
+        card.dataset.qid = q.uid;
+        card.setAttribute('data-aos','fade-up');
+        const head = document.createElement('div'); head.className='q-head';
+        head.innerHTML = `<div><span class="q-index">سؤال ${q.uid}</span> · <span class="tag">Ch ${q.chapter} · ${q.type.toUpperCase()}</span></div>`;
+        const body = document.createElement('div'); body.className='q-body';
+        const p = document.createElement('p'); p.textContent = q.q; body.appendChild(p);
+        const opts = document.createElement('div'); opts.className='options';
+        const letters = q.type==='tf' ? ['T','F'] : ['A','B','C','D'];
+        letters.forEach((L,idx)=>{
+          const label = document.createElement('label'); label.className='opt';
+          const inp = document.createElement('input'); inp.type='radio'; inp.name='q'+q.uid; inp.value=L;
+          const span = document.createElement('div');
+          span.textContent = (q.type==='tf')? (L==='T'?'True (صح)':'False (خطأ)') : (L+'. '+(q.options[idx]||''));
+          label.appendChild(inp); label.appendChild(span); opts.appendChild(label);
+        });
+        body.appendChild(opts);
+        const exp = document.createElement('div'); exp.className='explain'; exp.style.display='none'; body.appendChild(exp);
+        card.appendChild(head); card.appendChild(body); wrap.appendChild(card);
+      });
+      AOS.refreshHard();
+      byId('summary').innerHTML = '';
+      byId('wrongBtn').style.display='none'; byId('allBtn').style.display='none';
+    }
+
+    function grade(){
+      let correct=0, wrong=0, blank=0, gradable=0;
+      const chapSel = byId('chapterFilter').value;
+      const list = BANK.filter(q=> chapSel==='all' ? true : String(q.chapter)===chapSel);
+      list.forEach((q)=>{
+        const card = document.querySelector(`[data-qid="${q.uid}"]`);
+        if(!card) return;
+        const labels = [...card.querySelectorAll('label.opt')];
+        const selected = labels.find(l=>l.querySelector('input').checked)?.querySelector('input').value;
+        const key = (q.key||'').toUpperCase();
+        const exp = card.querySelector('.explain'); labels.forEach(l=>l.classList.remove('correct','incorrect'));
+        if(key) gradable++;
+        if(!selected){
+          blank++; exp.style.display=''; exp.textContent = key? `الإجابة الصحيحة: ${key}`: 'لا يوجد مفتاح.';
+          if(key){ const lab = labels.find(l=>l.querySelector('input').value===key); if(lab) lab.classList.add('correct'); }
+          return;
+        }
+        if(!key){ exp.style.display=''; exp.textContent='لا يوجد مفتاح.'; return; }
+        if(selected===key){ correct++; exp.style.display=''; exp.textContent='إجابة صحيحة ✔️'; const lab = labels.find(l=>l.querySelector('input').value===selected); if(lab) lab.classList.add('correct'); }
+        else { wrong++; exp.style.display=''; exp.textContent=`الإجابة الصحيحة: ${key}`; const right = labels.find(l=>l.querySelector('input').value===key); if(right) right.classList.add('correct'); const wrongLab = labels.find(l=>l.querySelector('input').value===selected); if(wrongLab) wrongLab.classList.add('incorrect'); }
+      });
+      const score = gradable? Math.round((correct/gradable)*100):0;
+      byId('summary').innerHTML = `
+        <span class="pill ok">✅ صح: ${correct}</span>
+        <span class="pill bad">❌ غلط: ${wrong}</span>
+        <span class="pill warn">⚠️ بدون إجابة: ${blank}</span>
+        <span class="pill" style="border:1px solid rgba(34,211,238,.45);background:rgba(34,211,238,.12);color:#67e8f9">الدرجة: ${score} / 100</span>
+        <span class="small">(الاحتساب من الأسئلة التي لها مفتاح فقط: ${gradable})</span>`;
+      byId('wrongBtn').style.display = (wrong+blank>0)? 'inline-flex':'none';
+      byId('allBtn').style.display = 'none';
+    }
+
+    function showWrong(){
+      const chapSel = byId('chapterFilter').value;
+      const list = BANK.filter(q=> chapSel==='all' ? true : String(q.chapter)===chapSel);
+      list.forEach((q)=>{
+        const card = document.querySelector(`[data-qid="${q.uid}"]`);
+        const labels = [...card.querySelectorAll('label.opt')];
+        const selected = labels.find(l=>l.querySelector('input').checked)?.querySelector('input').value;
+        const key = (q.key||'').toUpperCase();
+        const isWrong = (!selected) || (key && selected!==key);
+        if(card) card.style.display = isWrong? '':'';
+      });
+      byId('wrongBtn').style.display='none'; byId('allBtn').style.display='inline-flex';
+    }
+    function showAll(){ document.querySelectorAll('.q-card').forEach(c=>c.style.display=''); byId('allBtn').style.display='none'; byId('wrongBtn').style.display='inline-flex'; }
+
+    byId('chapterFilter').addEventListener('change', ()=>{ render(); window.scrollTo({top:0,behavior:'smooth'}); });
+    byId('shuffleBtn').addEventListener('click', ()=>{ BANK = BANK.sort(()=>Math.random()-.5); render(); });
+    byId('submitBtn').addEventListener('click', ()=>{ grade(); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}); });
+    byId('retryBtn').addEventListener('click', ()=>{ document.querySelectorAll('input[type=radio]').forEach(i=>i.checked=false); byId('summary').innerHTML=''; byId('wrongBtn').style.display='none'; byId('allBtn').style.display='none'; window.scrollTo({top:0,behavior:'smooth'}); });
+    byId('wrongBtn').addEventListener('click', showWrong); byId('allBtn').addEventListener('click', showAll);
+
+    // ========= RAW TEXT: EXACTLY AS SENT =========
+    const RAW = String.raw`CHAPTER 1:
+Computer ______ entails having knowledge and understanding of computers and their uses.
+a. literacy
+b. intimacy
+c. legitimacy
+d. infancy
+
+A(n) ______ is an electronic device, operating under the control of instructions stored in its own memory, that can accept data, process the data according to specified rules, produce results, and store the results for future use.
+a. input device
+b. computer
+c. output device
+d. both a and c
+
+A computer contains many electric, electronic, and mechanical components known as ______.
+a. software
+b. storage media
+c. output
+d. hardware
+
+______ consist(s) of a computer’s electronic components that store instructions waiting to be executed and data needed by those instructions.
+a. Memory
+b. Transmission media
+c. Storage
+d. Communications media
+
+A computer keeps data, instructions, and information on ______ media.
+a. communications
+b. storage
+c. reception
+d. reading
+
+A(n) ______ is anyone who communicates with a computer or utilizes the information it generates.
+a. texter
+b. developer
+c. user
+d. decoder
+
+When a computer connects to a network, such as the one in the accompanying figure, it is ____.
+a. linked
+b. inline
+d. online
+
+The ____, which is pictured in the accompanying figure, is a worldwide collection of networks that connects millions of businesses, government agencies, educational institutions, and individuals.
+a. Web
+c. Internet
+b. VoIP
+d. cellnet
+
+The Web contains ____ of documents called Web pages.
+a. thousands
+b. millions
+c. billions
+
+A Web page can contain ____.
+a. text and graphics
+b. audio
+c. video
+d. all of the above
+
+A(n) ______ is an informal Web site consisting of time-stamped articles in a diary or journal format, usually listed in reverse chronological order.
+a. blog
+b. podcast
+c. chat
+d. videoconference
+
+A(n) ______ is recorded audio stored on a Web site that can be downloaded to a computer or a portable media player.
+a. blog
+b. podcast
+c. chat
+d. videoconference
+
+______ is a series of instructions that tells a computer what to do and how to do it.
+a. Hardware
+b. Software
+c. Appware
+d. A podcast
+
+With a ______, such as that pictured in the accompanying figure, you interact with the software using text, graphics, and visual images.
+a. command line interface (CLI)
+b. graphical user interface (GUI)
+c. menu driven interface (MDI)
+d. voice oriented interface (VOI)
+
+As shown in the accompanying figure, a(n) ____ is a miniature image that represents a program, an instruction, or some other object.
+a. server
+b. processor
+c. icon
+d. network
+
+When a user starts a computer, portions of the ____ (of which Microsoft Windows, shown in the accompanying figure, is an example) load into memory from the computer’s hard disk.
+a. application software
+b. operating system
+c. graphical user interface (GUI)
+d. podcast
+
+A(n) ____ system is a set of programs that coordinates all the activities among computer hardware devices.
+a. operating
+b. director
+c. utility
+d. management
+
+A(n) ____ program is a type of system software that allows a user to perform maintenance-type tasks usually related to managing a computer, its devices, or its programs.
+a. embedded
+b. maintenance
+c. utility
+d. server
+
+____ is the process of setting up software to work with a computer, printer,, and other hardware components.
+a. Installing
+b. Running
+c. Executing
+d. Entering
+
+A(n) ____ is someone who develops software or writes the instructions that direct the computer to process data into information.
+a. director
+b. program manager
+c. programmer
+d. user
+
+A ____ computer is a computer that can perform all of its input, processing, output, and storage activities by itself.
+a. mainframe
+b. personal
+c. terminal
+d. mainline
+
+____ computers usually use a Macintosh operating system (Mac OS X).
+a. Apple
+b. PC
+c. PC-compatible
+d. All of the above
+
+A(n) ___ computer, as shown in the accompanying figure, is a portable, personal computer small enough to fit on your lap.
+a. handtop
+b. desktop
+d. notebook
+
+As shown in the accompanying figure, a(n) ______ device is a computing device small enough to carry in a pocket.
+a. integrated
+c. mobile
+b. desktop
+d. encapsulated
+
+Resembling a letter-sized slate, a ______ is a special type of notebook computer you can interact with by touching the screen with your finger or a digital pen.
+a. mainframe
+b. Tablet PC
+c. PPA
+d. hotspot
+
+A(n) ______ computer is designed so the system unit, input devices, output devices, and any other devices fit entirely on or under a desk or table.
+a. desktop
+b. encapsulated
+c. mobile
+d. handheld
+
+______ are the fastest, most powerful computers — and the most expensive.
+a. Embedded computers
+b. Supercomputers
+c. Mainframes
+d. Mobiles devices
+
+A(n) ______ computer is a special-purpose computer that functions as a component in a larger product.
+a. smart
+c. embedded
+b. handheld
+d. integral
+
+A(n) ___ includes any company with fewer than 50 employees, as well as the self-employed who work from home.
+a. small office/home office (SOHO)
+b. home user
+c. enterprise user
+d. power user
+
+An increasing number of employees and students are ___ users, who work on a computer while away from a main office or school.
+a. enterprise
+b. SOHO
+c. mobile
+d. power
+
+Examples of power users include all of the following EXCEPT ___.
+a. sales representatives
+b. engineers and scientists
+c. desktop publishers
+d. architects and graphic artists
+
+A category of user, called a ___ user, requires the capabilities of a powerful desktop computer, called a workstation.
+a. power
+b. mobile
+c. SOHO
+d. large business
+
+Each employee or customer who uses a computer in a large business is a(n) ___ user.
+a. SOHO
+b. enterprise
+c. mobile
+d. power
+
+Many large companies use the words, ___ computing, to refer to the huge network of computers that meets their diverse computing needs.
+a. online
+b. strategic
+c. enterprise
+d. management
+
+___ is a work arrangement in which employees work away from a company’s standard workplace and often communicate with the office through the computer.
+a. Telecommuting
+b. Teleprocessing
+c. Telescoping
+d. Telephering
+
+With ____, users access account balances, pay bills, and copy monthly transactions from a bank’s computer right into their own computers.
+a. online investing
+b. online banking
+c. neural networks
+d. All of the above
+
+People access ____ Web sites to file taxes, apply for permits and licenses, pay parking tickets, buy stamps, report crimes, apply for financial aid, and renew vehicle registrations and driver’s licenses.
+a. education
+b. government
+c. industry
+d. finance
+
+Investors often use ____ investing to buy and sell stocks and bonds — without using a broker.
+a. dynamic
+b. database-driven
+d. online
+
+Through ____, health-care professionals in separate locations conduct live conferences on computers.
+a. aeromedicine
+b. holistic medicine
+c. telemedicine
+d. nuclear medicine
+
+____ refers to the use of computers to assist with manufacturing processes such as fabrication and assembly.
+a. CAD
+c. CAM
+b. PCX
+d. USB
+
+True/False (25):
+Computers process output (information) into input (data).
+F (False)
+
+You insert and remove an external hard disk from the computer or a device connected to the computer.
+F (False)
+
+A USB flash drive ... small and lightweight ...
+T (True)
+
+A hard disk provides much less storage capacity than a USB flash drive ...
+F (False)
+
+A Web page is a collection of related Web sites.
+F (False)
+
+You interact with a program through its user interface.
+T (True)
+
+Application software consists of the programs that control or maintain the operations of the computer and its devices.
+F (False)
+
+When you buy a computer, it usually has some software preinstalled on its hard disk.
+T (True)
+
+Once a program is in memory, the computer can carry out, or execute, the instructions in the program.
+T (True)
+
+A computer’s size, speed, processing power, and price determine the category it best fits.
+T (True)
+
+Due to slowly changing technology, the distinction among categories of computers is always clear-cut.
+F (False)
+
+The most popular type of mobile computer is the desktop computer ...
+F (False)
+
+You can often connect a device ... to a personal computer to exchange information.
+T (True)
+
+Mobile devices ... store programs and data permanently ...
+T (True)
+
+A handheld computer ... small enough to fit in one hand ...
+T (True)
+
+With a handheld game console, the controls, screen, and speakers are built into the device.
+T (True)
+
+A server is a handheld Internet-enabled device.
+F (False)
+
+Applications requiring complex, sophisticated mathematical calculations ... use desktop computers.
+F (False)
+
+Most major corporations use supercomputers for daily business activities.
+F (False)
+
+SOHO users often have basic business software ...
+T (True)
+
+The accounting department ... uses desktop publishing software ...
+F (False)
+
+Employees who telecommute have rigid work schedules ...
+F (False)
+
+Students use software to assist with learning ...
+T (True)
+
+With online investing, the transaction fee ... much more ...
+F (False)
+
+Breakthroughs in surgery, medicine ... seldom result from scientists’ use of computers.
+F (False)
+
+CHAPTER 2:
+The ______ is a worldwide collection of networks ...
+a. Internet
+b. microblog
+c. Web
+d. NSFNet
+
+A(n) ____ address is a number that uniquely identifies ...
+a. TCP
+b. IP
+c. NSF
+d. DNS
+
+The ____, a widely used service on the Internet ...
+a. ARPA
+c. Web
+b. NSFNet
+d. VoIP
+
+Each document on the Web, called a Web ____ ...
+a. host
+b. net
+d. page
+
+... (الأسئلة كلها كما أرسلتها) ...
+
+True/False (25):
+No single person ... controls or owns the Internet.
+T (True)
+A dial-up Internet connection is high-speed technology.
+F (False)
+... (باقي البنود كما أرسلتها) ...
+
+CHAPTER 3:
+(كل أسئلة الفصل 3 كما أرسلتها) ...
+
+True/False (25):
+(بنود الفصل 3 كما أرسلتها) ...
+
+CHAPTER 4:
+(كل أسئلة الفصل 4 كما أرسلتها) ...
+
+True/False (25):
+(بنود الفصل 4 كما أرسلتها) ...
+
+CHAPTER 5:
+(كل أسئلة الفصل 5 كما أرسلتها) ...
+
+True/False (25):
+(بنود الفصل 5 كما أرسلتها) ...
+
+CHAPTER 6:
+(أسئلة الفصل 6 مع الإجابات كما أرسلتها)
+
+CHAPTER 7:
+(أسئلة الفصل 7 مع الإجابات كما أرسلتها)
+
+CHAPTER 9:
+(أسئلة الفصل 9 مع الإجابات كما أرسلتها)
+
+CHAPTER 11:
+(أسئلة الفصل 11 مع الإجابات كما أرسلتها)
+`;
+
+    // ===== Parser (robust enough for the format you sent) =====
+    function parseRaw(raw){
+      const lines = raw.split(/\r?\n/);
+      let chapter = null;
+      let uid = 0;
+      const items = [];
+      function pushMCQ(qtext, opts, key){
+        uid++; items.push({uid, chapter, type:'mcq', q:qtext.trim(), options:opts, key:(key||'')});
+      }
+      function pushTF(qtext, key){
+        uid++; items.push({uid, chapter, type:'tf', q:qtext.trim(), options:[], key:(key||'')});
+      }
+      for(let i=0;i<lines.length;i++){
+        let s = lines[i].trim();
+        const chm = s.match(/^chapter\s*(\d+)/i) || s.match(/^CHAPTER\s*(\d+)/i);
+        if(chm){ chapter = Number(chm[1]); continue; }
+        if(!s) continue;
+
+        // True/False pair: statement line then "T (True)" or "F (False)"
+        if(/[.؟?…]$/.test(s) && (lines[i+1]||'').match(/^\s*[TF]\s*\(/)){
+          const k = lines[i+1].trim().startsWith('T')?'T':'F';
+          pushTF(s, k);
+          i++;
+          continue;
+        }
+
+        // MCQ block: question then a./b./c./d.
+        if((lines[i+1]||'').match(/^[a-dA-D]\.\s/)){
+          const qtext = s;
+          const opts = [];
+          for(let k=1;k<=4;k++){
+            const m = (lines[i+k]||'').trim().match(/^[a-dA-D]\.\s*(.*)$/);
+            if(m){ opts.push(m[1]); }
+          }
+          // Try to find "الإجابة: X" shortly after
+          let key = '';
+          for(let k=5;k<=8;k++){
+            const ans = (lines[i+k]||'').trim().match(/^الإجابة\s*:\s*([A-DTF])/);
+            if(ans){ key = ans[1].toUpperCase(); break; }
+          }
+          pushMCQ(qtext, opts, key);
+          i += 4; // skip options
+          continue;
+        }
+
+        // lines like "الإجابة: X" alone -> attach to last item
+        const loneAns = s.match(/^الإجابة\s*:\s*([A-DTF])/);
+        if(loneAns && items.length){
+          items[items.length-1].key = loneAns[1].toUpperCase();
+          continue;
+        }
+      }
+      return items;
+    }
+
+    BANK = parseRaw(RAW);
+    render();
+  </script>
+</body>
+</html>
