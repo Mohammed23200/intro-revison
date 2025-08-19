@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>انترو تو كمبيوتر ساينس — Chapter 3 Quiz</title>
+  <!-- AOS animate on scroll -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#0b1b3b;
+      --bg-2:#0f2556;
+      --accent:#1e88e5;
+      --accent-2:#64b5f6;
+      --ink:#eaf4ff;
+      --muted:#b9d7ff;
+      --card:#0f1f45;
+      --border:#1d3b7a;
+      --green:#1db954;
+      --green-bg:#0f3d25;
+      --red:#ff5252;
+      --red-bg:#3a0f15;
+      --yellow:#ffca28;
+      --shadow:0 10px 28px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,var(--bg),var(--bg-2));color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Tahoma,Arial;scroll-behavior:smooth}
+    a{color:var(--accent-2);text-decoration:none}
+    a:hover{opacity:.9}
+    .container{max-width:1100px;margin:0 auto;padding:18px}
+    /* NAVBAR */
+    .nav{
+      position:sticky;top:0;z-index:9999;
+      backdrop-filter: blur(10px);
+      background:rgba(7,15,36,.6);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;padding-inline:12px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+    .brand .logo{
+      width:28px;height:28px;border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:inline-block;box-shadow:0 2px 10px rgba(30,136,229,.35)
+    }
+    .nav-links{display:flex;gap:14px;align-items:center;}
+    .nav-links a{padding:8px 10px;border-radius:10px}
+    .nav-links a:hover{background:rgba(255,255,255,.07)}
+    /* Hamburger */
+    .hamburger{display:none;cursor:pointer;border:none;background:transparent;padding:8px;border-radius:10px}
+    .hamburger:focus{outline:2px solid var(--accent)}
+    .hamburger span,.hamburger span:before,.hamburger span:after{
+      display:block;width:22px;height:2px;background:var(--ink);position:relative;transition:.25s
+    }
+    .hamburger span:before,.hamburger span:after{content:"";position:absolute;left:0}
+    .hamburger span:before{top:-6px}
+    .hamburger span:after{top:6px}
+    /* Mobile drawer */
+    .drawer{
+      position:fixed;inset:56px 0 auto 0;
+      background:rgba(7,15,36,.96);border-top:1px solid rgba(255,255,255,.06);
+      transform:translateY(-110%);transition:transform .25s ease;z-index:9998
+    }
+    .drawer.open{transform:translateY(0)}
+    .drawer .drawer-links{display:flex;flex-direction:column;padding:14px 18px;gap:8px}
+    .drawer .drawer-links a{padding:12px;border-radius:12px;background:rgba(255,255,255,.06)}
+    /* HERO */
+    .hero{padding:36px 18px 10px}
+    .hero .title{
+      font-size:clamp(24px,4vw,40px);font-weight:900;line-height:1.1;margin:6px 0;
+      background:linear-gradient(135deg,#fff,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent
+    }
+    .hero .subtitle{color:var(--muted);max-width:800px}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(100,181,246,.18);color:#daf0ff;border:1px solid rgba(100,181,246,.35);
+      padding:8px 12px;border-radius:999px;font-size:13px
+    }
+    .btn{
+      appearance:none;border:none;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;color:#08142c;
+      background:linear-gradient(135deg,#7cc2ff,#1e88e5);box-shadow:0 10px 24px rgba(30,136,229,.35)
+    }
+    .btn:hover{filter:brightness(1.02)}
+    .btn.secondary{background:rgba(255,255,255,.12);color:var(--ink);border:1px solid rgba(255,255,255,.18);box-shadow:none}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    /* SECTIONS */
+    section{padding:10px 0 30px}
+    .card{
+      background:linear-gradient(180deg,var(--card),#0b1b3b);
+      border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px
+    }
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .q-num{font-weight:800;color:var(--muted);margin-inline-end:8px}
+    .q-text{font-weight:700;margin-bottom:12px}
+    .option{
+      display:flex;align-items:flex-start;gap:10px;padding:10px 12px;margin:8px 0;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.03);
+      transition:.2s
+    }
+    .option:hover{background:rgba(255,255,255,.06)}
+    .option input{transform:translateY(3px);accent-color:var(--accent)}
+    /* Result colors */
+    .option.correct{border-color:rgba(29,185,84,.85);background:var(--green-bg)}
+    .option.incorrect{border-color:rgba(255,82,82,.9);background:var(--red-bg)}
+    .option.correct .badge{color:var(--green)}
+    .option.incorrect .badge{color:var(--red)}
+    .badge{font-weight:900;margin-inline-start:auto}
+    .question-card.unanswered{outline:2px dashed var(--yellow);outline-offset:3px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 12px}
+    .muted{color:var(--muted);font-size:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .results{
+      display:none;margin-top:14px;padding:14px;border-radius:14px;
+      background:linear-gradient(180deg,#0f2d62,#0b1b3b);border:1px solid var(--border)
+    }
+    .results.show{display:block}
+    .score{font-weight:900;font-size:18px}
+    .footer{text-align:center;color:var(--muted);padding:30px 12px 60px}
+    .made{margin-top:6px;color:#9fe0ff}
+    /* Responsive */
+    @media (min-width: 720px){ .grid{grid-template-columns:1fr 1fr} }
+    @media (max-width: 860px){ .nav-links{display:none} .hamburger{display:block} }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand"><span class="logo" aria-hidden="true"></span>انترو تو كمبيوتر ساينس</div>
+      <div class="nav-links" aria-label="روابط">
+        <a href="#mcq">اختياري</a>
+        <a href="#tf">صح/خطأ</a>
+        <a href="#resultBox">النتيجة</a>
+      </div>
+      <button class="hamburger" aria-label="فتح وإغلاق القائمة" aria-expanded="false"><span></span></button>
+    </div>
+    <div class="drawer" id="drawer" aria-hidden="true">
+      <div class="drawer-links">
+        <a href="#mcq" onclick="toggleDrawer(false)">اختياري</a>
+        <a href="#tf" onclick="toggleDrawer(false)">صح/خطأ</a>
+        <a href="#resultBox" onclick="toggleDrawer(false)">النتيجة</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container">
+    <div class="chip" data-aos="fade-down">Chapter 3 — Application Software</div>
+    <h1 class="title" data-aos="fade-up">اختبار الفصل الثالث (40 اختيار من متعدد + 25 صح/خطأ)</h1>
+    <p class="subtitle" data-aos="fade-up" data-aos-delay="80">
+      جاوب وبعدين اضغط <strong>عرض النتيجة</strong>. الصح باللون الأخضر والغلط باللون الأحمر، والغير مُجاب عليه بإطار أصفر مع إظهار الإجابة الصحيحة للتعلّم.
+      شغال على الكمبيوتر والموبايل + زر همبورجر لإظهار/إخفاء الناف بار.
+    </p>
+    <div class="actions" data-aos="fade-up" data-aos-delay="120">
+      <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+      <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="mcq" aria-labelledby="mcq-title">
+      <div class="section-title">
+        <h2 id="mcq-title">الأسئلة الاختيارية (40 سؤال)</h2>
+        <span class="muted">اختر إجابة واحدة لكل سؤال</span>
+      </div>
+      <div class="grid">
+        <!-- 1 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc1" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">1)</span>Personal computer operating systems often use the concept of ____, which is an on-screen work area with a GUI.</div>
+          <label class="option"><input type="radio" name="mc1" value="a"> a. convergence <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="c"> c. the desktop <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="b"> b. multimedia <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="d"> d. application management <span class="badge"></span></label>
+        </div>
+        <!-- 2 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc2" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">2)</span>______ software assists people in becoming more effective and efficient while performing their daily business activities.</div>
+          <label class="option"><input type="radio" name="mc2" value="a"> a. Business <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="b"> b. Productivity <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="c"> c. Professional <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="d"> d. Web <span class="badge"></span></label>
+        </div>
+        <!-- 3 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc3" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">3)</span>______ software allows users to create and manipulate documents containing mostly text and sometimes graphics.</div>
+          <label class="option"><input type="radio" name="mc3" value="a"> a. Document production <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="b"> b. Word processing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="c"> c. Document manipulation <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="d"> d. Desktop publishing <span class="badge"></span></label>
+        </div>
+        <!-- 4 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc4" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">4)</span>______ is/are a collection of drawings, diagrams, maps, and photographs that you can insert in documents.</div>
+          <label class="option"><input type="radio" name="mc4" value="a"> a. Graphics galleries <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="c"> c. Clip art <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="b"> b. Visual dictionaries <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="d"> d. Art indexes <span class="badge"></span></label>
+        </div>
+        <!-- 5 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc5" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">5)</span>A ___ is a name assigned to a specific design of characters, such as Cambria or Calibri.</div>
+          <label class="option"><input type="radio" name="mc5" value="a"> a. graph <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="b"> b. type <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="c"> c. serif <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="d"> d. font <span class="badge"></span></label>
+        </div>
+        <!-- 6 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc6" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">6)</span>___ size, such as 12-point or 28-point, indicates the size of the characters in a particular font.</div>
+          <label class="option"><input type="radio" name="mc6" value="a"> a. Font <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="b"> b. Textual <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="c"> c. Graph <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="d"> d. Data <span class="badge"></span></label>
+        </div>
+        <!-- 7 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc7" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">7)</span>A font _____, such as bold, italic, and underline, adds emphasis to a font.</div>
+          <label class="option"><input type="radio" name="mc7" value="a"> a. type <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="b"> b. face <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="c"> c. style <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="d"> d. weight <span class="badge"></span></label>
+        </div>
+        <!-- 8 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc8" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">8)</span>To ___ a document means to make changes to its existing content.</div>
+          <label class="option"><input type="radio" name="mc8" value="a"> a. save <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="b"> b. edit <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="c"> c. format <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="d"> d. print <span class="badge"></span></label>
+        </div>
+        <!-- 9 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc9" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">9)</span>When users ___ a document, they change its appearance.</div>
+          <label class="option"><input type="radio" name="mc9" value="a"> a. create <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="b"> b. save <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="c"> c. format <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="d"> d. edit <span class="badge"></span></label>
+        </div>
+        <!-- 10 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc10" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">10)</span>A function ____.</div>
+          <label class="option"><input type="radio" name="mc10" value="a"> a. provides images, pictures, and video to enhance the spreadsheet <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="b"> b. is a request for specific data from a spreadsheet <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="c"> c. compares spelling with an electronic dictionary <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="d"> d. is a predefined formula that performs common calculations <span class="badge"></span></label>
+        </div>
+        <!-- 11 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc11" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">11)</span>______ software allows users to organize data in rows and columns and perform calculations on the data.</div>
+          <label class="option"><input type="radio" name="mc11" value="a"> a. Spreadsheet <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="b"> b. Word processing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="c"> c. Accounting <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="d"> d. Database <span class="badge"></span></label>
+        </div>
+        <!-- 12 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc12" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">12)</span>When using spreadsheet software, the rows and columns collectively are called a(n) ____.</div>
+          <label class="option"><input type="radio" name="mc12" value="a"> a. workbase <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="b"> b. worksheet <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="c"> c. workbook <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="d"> d. workform <span class="badge"></span></label>
+        </div>
+        <!-- 13 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc13" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">13)</span>A ____ is a collection of data organized in a manner that allows access, retrieval, and use of that data.</div>
+          <label class="option"><input type="radio" name="mc13" value="a"> a. spreadsheet <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="b"> b. database <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="c"> c. formula <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="d"> d. functional set <span class="badge"></span></label>
+        </div>
+        <!-- 14 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc14" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">14)</span>______ software allows users to create, access, and manage a database.</div>
+          <label class="option"><input type="radio" name="mc14" value="a"> a. Basis <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="b"> b. Text management <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="c"> c. Database <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="d"> d. Context management <span class="badge"></span></label>
+        </div>
+        <!-- 15 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc15" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">15)</span>With spreadsheet software, you can create a _____ to show a trend during a period of time.</div>
+          <label class="option"><input type="radio" name="mc15" value="a"> a. line chart <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="b"> b. column chart <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="c"> c. pie chart <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="d"> d. scatter chart <span class="badge"></span></label>
+        </div>
+        <!-- 16 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc16" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">16)</span>With spreadsheet software, you can create a _____ to show the relationship of parts to a whole.</div>
+          <label class="option"><input type="radio" name="mc16" value="a"> a. line chart <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="b"> b. column chart <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="c"> c. pie chart <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="d"> d. scatter chart <span class="badge"></span></label>
+        </div>
+        <!-- 17 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc17" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">17)</span>A query ____.</div>
+          <label class="option"><input type="radio" name="mc17" value="a"> a. provides images, pictures, and video to enhance the database <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="b"> b. is a request for specific data from a database <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="c"> c. compares the spelling of words with an electronic dictionary <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="d"> d. is a predefined formula that performs common calculations <span class="badge"></span></label>
+        </div>
+        <!-- 18 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc18" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">18)</span>Presentation software typically includes a clip gallery that ____.</div>
+          <label class="option"><input type="radio" name="mc18" value="a"> a. provides images, pictures, and video to enhance presentations <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="b"> b. requests data from a presentation <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="c"> c. compares spelling with an electronic dictionary <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="d"> d. performs common calculations <span class="badge"></span></label>
+        </div>
+        <!-- 19 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc19" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">19)</span>______ software enables users to enter typed text, handwritten comments, drawings, or sketches anywhere on a page.</div>
+          <label class="option"><input type="radio" name="mc19" value="a"> a. Sketching <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="b"> b. Notebook <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="c"> c. Note taking <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="d"> d. Tablet <span class="badge"></span></label>
+        </div>
+        <!-- 20 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc20" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">20)</span>A software ____ is a collection of individual application programs available together as a unit.</div>
+          <label class="option"><input type="radio" name="mc20" value="a"> a. cluster <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="b"> b. suite <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="c"> c. zip <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="d"> d. archive <span class="badge"></span></label>
+        </div>
+        <!-- 21 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc21" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">21)</span>______ software allows a user to plan, schedule, track, and analyze the events, resources, and costs of a project.</div>
+          <label class="option"><input type="radio" name="mc21" value="a"> a. Business <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="b"> b. Document management <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="d"> d. Project management <span class="badge"></span></label>
+        </div>
+        <!-- 22 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc22" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">22)</span>______ software allows users to draw pictures, shapes, and other graphical images with on-screen tools like a pen, brush, and paint bucket.</div>
+          <label class="option"><input type="radio" name="mc22" value="a"> a. Paint <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="b"> b. Pixel manipulation <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="c"> c. Design <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="d"> d. Color library <span class="badge"></span></label>
+        </div>
+        <!-- 23 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc23" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">23)</span>Web page ______ software helps users of all skill levels create rich Web pages.</div>
+          <label class="option"><input type="radio" name="mc23" value="a"> a. management <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="b"> b. authoring <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="c"> c. publishing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="d"> d. editing <span class="badge"></span></label>
+        </div>
+        <!-- 24 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc24" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">24)</span>______ is a simplified accounting program for home/SOHO users to balance checkbooks, pay bills, and track income/expenses.</div>
+          <label class="option"><input type="radio" name="mc24" value="a"> a. Accounting <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="b"> b. Online banking <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="c"> c. Personal finance <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="d"> d. Money indexing <span class="badge"></span></label>
+        </div>
+        <!-- 25 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc25" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">25)</span>______ helps users create newsletters, brochures, advertisements, cards, logos, and Web pages.</div>
+          <label class="option"><input type="radio" name="mc25" value="a"> a. Legal software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="b"> b. Personal DTP software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="c"> c. Tax preparation software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="d"> d. Personal finance software <span class="badge"></span></label>
+        </div>
+        <!-- 26 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc26" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">26)</span>______ software assists in the preparation of legal documents and provides legal information.</div>
+          <label class="option"><input type="radio" name="mc26" value="a"> a. Tax <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="b"> b. Legal <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="c"> c. Accounting <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="d"> d. Document management <span class="badge"></span></label>
+        </div>
+        <!-- 27 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc27" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">27)</span>______ software can guide individuals or small businesses through the process of filing federal taxes.</div>
+          <label class="option"><input type="radio" name="mc27" value="a"> a. Filing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="b"> b. Accounting <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="c"> c. Tax preparation <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="d"> d. Financial management <span class="badge"></span></label>
+        </div>
+        <!-- 28 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc28" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">28)</span>Application software often includes a clip art/image _____, which is a collection of clip art and photographs.</div>
+          <label class="option"><input type="radio" name="mc28" value="a"> a. glossary <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="b"> b. checker <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="d"> d. gallery <span class="badge"></span></label>
+        </div>
+        <!-- 29 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc29" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">29)</span>One popular type of image editing software, called _____, allows users to edit digital pictures and add effects.</div>
+          <label class="option"><input type="radio" name="mc29" value="a"> a. clip art/image gallery <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="b"> b. entertainment software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="c"> c. photo editing software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="d"> d. paint software <span class="badge"></span></label>
+        </div>
+        <!-- 30 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc30" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">30)</span>Homeowners or potential homeowners can use ____ to assist with design or remodeling of a house or environment.</div>
+          <label class="option"><input type="radio" name="mc30" value="a"> a. computer-aided design software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="b"> b. project management software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="d"> d. home design/landscaping software <span class="badge"></span></label>
+        </div>
+        <!-- 31 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc31" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">31)</span>_____, which includes encyclopedias and dictionaries, provides valuable information for all individuals.</div>
+          <label class="option"><input type="radio" name="mc31" value="a"> a. Reference software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="b"> b. Paint software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="c"> c. Legal software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="d"> d. Entertainment software <span class="badge"></span></label>
+        </div>
+        <!-- 32 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc32" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">32)</span>______ is a type of education in which students learn by using and completing exercises with instructional software.</div>
+          <label class="option"><input type="radio" name="mc32" value="a"> a. CBT <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="b"> b. WBT <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="c"> c. DTP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="d"> d. E-learning <span class="badge"></span></label>
+        </div>
+        <!-- 33 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc33" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">33)</span>______ software is a type of software that teaches a particular skill.</div>
+          <label class="option"><input type="radio" name="mc33" value="a"> a. Learning <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="b"> b. Educational <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="c"> c. DL <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="d"> d. Interactive <span class="badge"></span></label>
+        </div>
+        <!-- 34 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc34" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">34)</span>______ software for personal computers includes interactive games, videos, and programs for amusement.</div>
+          <label class="option"><input type="radio" name="mc34" value="a"> a. Amusement <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="b"> b. Multimedia <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="c"> c. Entertainment <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="d"> d. Messaging <span class="badge"></span></label>
+        </div>
+        <!-- 35 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc35" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">35)</span>______ is a Web application productivity suite.</div>
+          <label class="option"><input type="radio" name="mc35" value="a"> a. Flickr <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="b"> b. wikiCalc <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="d"> d. Google Docs <span class="badge"></span></label>
+        </div>
+        <!-- 36 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc36" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">36)</span>______ provides real-time exchange of messages, files, audio, and/or video with another online user.</div>
+          <label class="option"><input type="radio" name="mc36" value="a"> a. E-mail <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="b"> b. Instant messaging <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="c"> c. Web browser <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="d"> d. Newsgroup <span class="badge"></span></label>
+        </div>
+        <!-- 37 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc37" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">37)</span>______ allows users to speak to other users over the Internet.</div>
+          <label class="option"><input type="radio" name="mc37" value="a"> a. WBT <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="b"> b. VoIP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="c"> c. E-learning software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="d"> d. DL <span class="badge"></span></label>
+        </div>
+        <!-- 38 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc38" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">38)</span>Similar to CBT, ______ typically consists of self-directed, self-paced instruction about a topic.</div>
+          <label class="option"><input type="radio" name="mc38" value="a"> a. DTP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="b"> b. CAD <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="d"> d. WBT <span class="badge"></span></label>
+        </div>
+        <!-- 39 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc39" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">39)</span>______ is the electronic equivalent of a user manual.</div>
+          <label class="option"><input type="radio" name="mc39" value="a"> a. Distance learning <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="b"> b. Web-based learning <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="c"> c. Online Help <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="d"> d. E-learning <span class="badge"></span></label>
+        </div>
+        <!-- 40 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc40" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">40)</span>______ is a type of CBT that uses Internet technology and consists of application software on the Web.</div>
+          <label class="option"><input type="radio" name="mc40" value="a"> a. Enterprise software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="b"> b. WBT <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="c"> c. E-learning software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="d"> d. DL <span class="badge"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <section id="tf" aria-labelledby="tf-title">
+      <div class="section-title">
+        <h2 id="tf-title">أسئلة الصح والخطأ (25 سؤال)</h2>
+        <span class="muted">اختر (T) صح أو (F) خطأ</span>
+      </div>
+      <div class="grid">
+        <!-- Build 25 T/F from user list -->
+        <div class="card question-card" data-type="tf" data-qid="tf1"  data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">1)</span>While a computer is running, the operating system remains in memory.</div><label class="option"><input type="radio" name="tf1" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf1" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf2"  data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">2)</span>To click a button on the screen requires moving the pointer to the button and then pressing and releasing a mouse button.</div><label class="option"><input type="radio" name="tf2" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf2" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf3"  data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">3)</span>A command is an instruction that causes a program to perform a specific action.</div><label class="option"><input type="radio" name="tf3" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf3" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf4"  data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">4)</span>To start a program, usually you can click its program name on a menu or list.</div><label class="option"><input type="radio" name="tf4" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf4" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf5"  data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">5)</span>A dialog box contains a list of commands from which you make selections.</div><label class="option"><input type="radio" name="tf5" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf5" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf6"  data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">6)</span>A feature called wordwrap forces users of word processing software to press ENTER at the end of each line.</div><label class="option"><input type="radio" name="tf6" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf6" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf7"  data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">7)</span>Pasting is transferring an item from a document to the clipboard.</div><label class="option"><input type="radio" name="tf7" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf7" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf8"  data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">8)</span>A single point is about 1/4 of an inch in height.</div><label class="option"><input type="radio" name="tf8" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf8" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf9"  data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">9)</span>When you save a document, the computer transfers the document from a storage medium to memory.</div><label class="option"><input type="radio" name="tf9" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf9" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf10" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">10)</span>All columns and rows in a worksheet are displayed on the screen at one time.</div><label class="option"><input type="radio" name="tf10" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf10" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf11" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">11)</span>In a worksheet, a grid is the intersection of a column and row.</div><label class="option"><input type="radio" name="tf11" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf11" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf12" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">12)</span>The intersection of column B and row 6 is referred to as cell 6B.</div><label class="option"><input type="radio" name="tf12" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf12" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf13" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">13)</span>A line chart, also called a column chart, shows the relationship of parts to a whole.</div><label class="option"><input type="radio" name="tf13" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf13" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf14" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">14)</span>In a database, each row, called a field, contains a specific category of data within a record.</div><label class="option"><input type="radio" name="tf14" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf14" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf15" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">15)</span>The cost of accounting software for small businesses is more than several hundred thousand dollars.</div><label class="option"><input type="radio" name="tf15" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf15" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf16" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">16)</span>With document management software, the converted document cannot be viewed or printed without the original software.</div><label class="option"><input type="radio" name="tf16" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf16" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf17" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">17)</span>Video editing software lets users modify audio clips and produce studio-quality soundtracks.</div><label class="option"><input type="radio" name="tf17" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf17" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf18" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">18)</span>Audio editing software allows users to modify a segment of a video, called a clip.</div><label class="option"><input type="radio" name="tf18" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf18" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf19" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">19)</span>Training centers and online magazines use CAD software to develop interactive applications.</div><label class="option"><input type="radio" name="tf19" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf19" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf20" data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">20)</span>A large amount of application software is designed for home, personal, and educational use.</div><label class="option"><input type="radio" name="tf20" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf20" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf21" data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">21)</span>Most programs designed for home, personal, and educational use are relatively inexpensive.</div><label class="option"><input type="radio" name="tf21" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf21" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf22" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">22)</span>Legal software provides forecasts of tax liability and offers money-saving tax tips.</div><label class="option"><input type="radio" name="tf22" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf22" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf23" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">23)</span>Few personal DTP programs include paint/image editing or photo editing software.</div><label class="option"><input type="radio" name="tf23" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf23" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf24" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">24)</span>Most online Help links to textbooks available in bookstores.</div><label class="option"><input type="radio" name="tf24" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf24" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf25" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">25)</span>No Web sites offer WBT (Web-based training) to the general public.</div><label class="option"><input type="radio" name="tf25" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf25" value="F"> خطأ (F) <span class="badge"></span></label></div>
+      </div>
+
+      <div class="actions" style="margin-top:18px">
+        <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+        <button class="btn secondary" onclick="resetQuiz()">مسح الاختيارات</button>
+      </div>
+    </section>
+
+    <section id="resultBox" aria-labelledby="res-title">
+      <div class="card" data-aos="fade-up">
+        <div class="section-title">
+          <h2 id="res-title">نتيجتك</h2>
+          <span class="muted">تفاصيل الدرجات بعد التصحيح</span>
+        </div>
+        <div class="results" id="results">
+          <div class="score" id="scoreLine">—</div>
+          <div class="muted" id="detailLine" style="margin-top:6px">—</div>
+          <div class="muted" id="tipLine" style="margin-top:6px">الأسئلة غير المُجابة تظهر بإطار أصفر.</div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn" onclick="scrollToTop()">العودة للأعلى</button>
+            <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div>© Chapter 3 Quiz — نفس الثيم الأزرق الموحد</div>
+    <div class="made">صُنعت بالحب 💙</div>
+  </footer>
+
+  <!-- AOS + App JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 500, easing: 'ease-out' });
+
+    const drawer = document.getElementById('drawer');
+    const burger = document.querySelector('.hamburger');
+    function toggleDrawer(forceState){
+      const willOpen = (typeof forceState==='boolean') ? forceState : !drawer.classList.contains('open');
+      drawer.classList.toggle('open', willOpen);
+      burger.setAttribute('aria-expanded', String(willOpen));
+      drawer.setAttribute('aria-hidden', String(!willOpen));
+    }
+    burger.addEventListener('click', () => toggleDrawer());
+
+    function clearColors(card){
+      card.classList.remove('unanswered');
+      card.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('correct','incorrect');
+        const badge = opt.querySelector('.badge'); if (badge) badge.textContent = '';
+      });
+    }
+
+    function gradeSection(selector){
+      const cards = Array.from(document.querySelectorAll(selector));
+      let total = cards.length, correct = 0, unanswered = 0;
+      cards.forEach(card => {
+        clearColors(card);
+        const answer = card.dataset.answer;
+        const chosen = card.querySelector('input[type="radio"]:checked');
+        if(!chosen){
+          unanswered++;
+          card.classList.add('unanswered');
+          const corrLabel = card.querySelector('input[value=\"'+answer+'\"]')?.closest('.option');
+          if(corrLabel){ corrLabel.classList.add('correct'); corrLabel.querySelector('.badge').textContent = '✓'; }
+          return;
+        }
+        const chosenVal = chosen.value;
+        const chosenLabel = chosen.closest('.option');
+        const correctLabel = card.querySelector('input[value=\"'+answer+'\"]')?.closest('.option');
+        if(chosenVal === answer){
+          correct++;
+          chosenLabel.classList.add('correct');
+          chosenLabel.querySelector('.badge').textContent = '✓';
+        }else{
+          chosenLabel.classList.add('incorrect');
+          chosenLabel.querySelector('.badge').textContent = '✗';
+          if(correctLabel){ correctLabel.classList.add('correct'); correctLabel.querySelector('.badge').textContent = '✓'; }
+        }
+      });
+      return {total, correct, unanswered, wrong: total - correct - unanswered};
+    }
+
+    function gradeAll(){
+      const r1 = gradeSection('#mcq .question-card');
+      const r2 = gradeSection('#tf .question-card');
+      const totalQ = r1.total + r2.total;
+      const correct = r1.correct + r2.correct;
+      const unanswered = r1.unanswered + r2.unanswered;
+      const wrong = totalQ - correct - unanswered;
+      const percent = Math.round((correct/totalQ)*100);
+
+      const results = document.getElementById('results');
+      const scoreLine = document.getElementById('scoreLine');
+      const detailLine = document.getElementById('detailLine');
+      scoreLine.textContent = `الدرجة الكلية: ${correct} / ${totalQ} (${percent}%)`;
+      detailLine.textContent = `اختياري: ${r1.correct}/${r1.total} — صح/خطأ: ${r2.correct}/${r2.total} — أخطاء: ${wrong} — غير مُجاب: ${unanswered}`;
+      results.classList.add('show');
+      document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+    }
+
+    function resetQuiz(){
+      document.querySelectorAll('.question-card').forEach(card => {
+        clearColors(card);
+        card.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      });
+      document.getElementById('results').classList.remove('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+  </script>
+</body>
+</html>
