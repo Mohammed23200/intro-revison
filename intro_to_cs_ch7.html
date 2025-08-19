@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>انترو تو كمبيوتر ساينس — Chapter (Operating Systems) Quiz</title>
+  <!-- AOS animate on scroll -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#0b1b3b;
+      --bg-2:#0f2556;
+      --accent:#1e88e5;
+      --accent-2:#64b5f6;
+      --ink:#eaf4ff;
+      --muted:#b9d7ff;
+      --card:#0f1f45;
+      --border:#1d3b7a;
+      --green:#1db954;
+      --green-bg:#0f3d25;
+      --red:#ff5252;
+      --red-bg:#3a0f15;
+      --yellow:#ffca28;
+      --shadow:0 10px 28px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,var(--bg),var(--bg-2));color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Tahoma,Arial;scroll-behavior:smooth}
+    a{color:var(--accent-2);text-decoration:none}
+    a:hover{opacity:.9}
+    .container{max-width:1100px;margin:0 auto;padding:18px}
+    /* NAVBAR */
+    .nav{
+      position:sticky;top:0;z-index:9999;
+      backdrop-filter: blur(10px);
+      background:rgba(7,15,36,.6);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;padding-inline:12px}
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px
+    }
+    .brand .logo{
+      width:28px;height:28px;border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:inline-block;box-shadow:0 2px 10px rgba(30,136,229,.35)
+    }
+    .nav-links{
+      display:flex;gap:14px;align-items:center;
+    }
+    .nav-links a{padding:8px 10px;border-radius:10px}
+    .nav-links a:hover{background:rgba(255,255,255,.07)}
+    /* Hamburger */
+    .hamburger{
+      display:none;cursor:pointer;border:none;background:transparent;padding:8px;border-radius:10px
+    }
+    .hamburger:focus{outline:2px solid var(--accent)}
+    .hamburger span,.hamburger span:before,.hamburger span:after{
+      display:block;width:22px;height:2px;background:var(--ink);position:relative;transition:.25s
+    }
+    .hamburger span:before,.hamburger span:after{content:"";position:absolute;left:0}
+    .hamburger span:before{top:-6px}
+    .hamburger span:after{top:6px}
+    /* Mobile drawer */
+    .drawer{
+      position:fixed;inset:56px 0 auto 0; /* below navbar */
+      background:rgba(7,15,36,.96);border-top:1px solid rgba(255,255,255,.06);
+      transform:translateY(-110%);transition:transform .25s ease;z-index:9998
+    }
+    .drawer.open{transform:translateY(0)}
+    .drawer .drawer-links{display:flex;flex-direction:column;padding:14px 18px;gap:8px}
+    .drawer .drawer-links a{padding:12px;border-radius:12px;background:rgba(255,255,255,.06)}
+    /* HERO */
+    .hero{padding:36px 18px 10px}
+    .hero .title{
+      font-size:clamp(24px,4vw,40px);font-weight:900;line-height:1.1;margin:6px 0;
+      background:linear-gradient(135deg,#fff,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent
+    }
+    .hero .subtitle{color:var(--muted);max-width:800px}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(100,181,246,.18);color:#daf0ff;border:1px solid rgba(100,181,246,.35);
+      padding:8px 12px;border-radius:999px;font-size:13px
+    }
+    .btn{
+      appearance:none;border:none;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;color:#08142c;
+      background:linear-gradient(135deg,#7cc2ff,#1e88e5);box-shadow:0 10px 24px rgba(30,136,229,.35)
+    }
+    .btn:hover{filter:brightness(1.02)}
+    .btn.secondary{background:rgba(255,255,255,.12);color:var(--ink);border:1px solid rgba(255,255,255,.18);box-shadow:none}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    /* SECTIONS */
+    section{padding:10px 0 30px}
+    .card{
+      background:linear-gradient(180deg,var(--card),#0b1b3b);
+      border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px
+    }
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .q-num{font-weight:800;color:var(--muted);margin-inline-end:8px}
+    .q-text{font-weight:700;margin-bottom:12px}
+    .option{
+      display:flex;align-items:flex-start;gap:10px;padding:10px 12px;margin:8px 0;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.03);
+      transition:.2s
+    }
+    .option:hover{background:rgba(255,255,255,.06)}
+    .option input{transform:translateY(3px);accent-color:var(--accent)}
+    /* Result colors */
+    .option.correct{border-color:rgba(29,185,84,.85);background:var(--green-bg)}
+    .option.incorrect{border-color:rgba(255,82,82,.9);background:var(--red-bg)}
+    .option.correct .badge{color:var(--green)}
+    .option.incorrect .badge{color:var(--red)}
+    .badge{font-weight:900;margin-inline-start:auto}
+    .question-card.unanswered{outline:2px dashed var(--yellow);outline-offset:3px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 12px}
+    .muted{color:var(--muted);font-size:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .results{
+      display:none;margin-top:14px;padding:14px;border-radius:14px;
+      background:linear-gradient(180deg,#0f2d62,#0b1b3b);border:1px solid var(--border)
+    }
+    .results.show{display:block}
+    .score{font-weight:900;font-size:18px}
+    .footer{
+      text-align:center;color:var(--muted);padding:30px 12px 60px
+    }
+    .made{margin-top:6px;color:#9fe0ff}
+    /* Responsive */
+    @media (min-width: 720px){
+      .grid{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 860px){
+      .nav-links{display:none}
+      .hamburger{display:block}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand"><span class="logo" aria-hidden="true"></span>انترو تو كمبيوتر ساينس</div>
+      <div class="nav-links" aria-label="روابط">
+        <a href="#mcq">اختياري</a>
+        <a href="#tf">صح/خطأ</a>
+        <a href="#resultBox">النتيجة</a>
+      </div>
+      <button class="hamburger" aria-label="فتح وإغلاق القائمة" aria-expanded="false"><span></span></button>
+    </div>
+    <div class="drawer" id="drawer" aria-hidden="true">
+      <div class="drawer-links">
+        <a href="#mcq" onclick="toggleDrawer(false)">اختياري</a>
+        <a href="#tf" onclick="toggleDrawer(false)">صح/خطأ</a>
+        <a href="#resultBox" onclick="toggleDrawer(false)">النتيجة</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container">
+    <div class="chip" data-aos="fade-down">Chapter — Operating Systems</div>
+    <h1 class="title" data-aos="fade-up">اختبار نظم التشغيل (40 اختيار من متعدد + 25 صح/خطأ)</h1>
+    <p class="subtitle" data-aos="fade-up" data-aos-delay="80">
+      جاوب وبعدين اضغط <strong>عرض النتيجة</strong>. الصح باللون الأخضر والخطأ باللون الأحمر.
+      شغال بسلاسة على الكمبيوتر والموبايل + زر همبورجر لإظهار/إخفاء الناف بار.
+    </p>
+    <div class="actions" data-aos="fade-up" data-aos-delay="120">
+      <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+      <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="mcq" aria-labelledby="mcq-title">
+      <div class="section-title">
+        <h2 id="mcq-title">الأسئلة الاختيارية (40 سؤال)</h2>
+        <span class="muted">اختر إجابة واحدة لكل سؤال</span>
+      </div>
+      <div class="grid">
+        <!-- 40 MCQ from the user's list with correct answers -->
+        <!-- 1 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc1" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">1)</span>Which of the following is not an operating system function?</div>
+          <label class="option"><input type="radio" name="mc1" value="a"> a. starting the computer <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="b"> b. managing programs <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="c"> c. word processing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="d"> d. establishing an Internet connection <span class="badge"></span></label>
+        </div>
+
+        <!-- 2 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc2" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">2)</span>A ___ boot is the process of using the operating system to restart a computer.</div>
+          <label class="option"><input type="radio" name="mc2" value="a"> a. warm <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="b"> b. cold <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="c"> c. start <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="d"> d. new <span class="badge"></span></label>
+        </div>
+
+        <!-- 3 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc3" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">3)</span>To perform a warm boot, click the ___ command in the Shut down button menu.</div>
+          <label class="option"><input type="radio" name="mc3" value="a"> a. Stand By <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="b"> b. Turn Off <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="c"> c. Restart <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="d"> d. Cancel <span class="badge"></span></label>
+        </div>
+
+        <!-- 4 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc4" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">4)</span>A ___ interface controls how you enter data and instructions and how information is displayed on the screen.</div>
+          <label class="option"><input type="radio" name="mc4" value="a"> a. control <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="b"> b. utility <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="c"> c. user <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="d"> d. management <span class="badge"></span></label>
+        </div>
+
+        <!-- 5 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc5" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">5)</span>In a ____, the user types commands or presses special keys on the keyboard to enter data and instructions.</div>
+          <label class="option"><input type="radio" name="mc5" value="a"> a. command-line interface <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="b"> b. menu-driven interface <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="c"> c. performance-monitor interface <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="d"> d. graphical user interface (GUI) <span class="badge"></span></label>
+        </div>
+
+        <!-- 6 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc6" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">6)</span>With a ____, users interact with menus and visual images such as buttons and other graphical objects to issue commands.</div>
+          <label class="option"><input type="radio" name="mc6" value="a"> a. command-line interface <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="b"> b. menu-driven interface <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="c"> c. performance-monitor interface <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="d"> d. graphical user interface (GUI) <span class="badge"></span></label>
+        </div>
+
+        <!-- 7 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc7" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">7)</span>The purpose of memory ____ is to optimize the use of RAM.</div>
+          <label class="option"><input type="radio" name="mc7" value="a"> a. performance <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="b"> b. management <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="c"> c. throttling <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="d"> d. integration <span class="badge"></span></label>
+        </div>
+
+        <!-- 8 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc8" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">8)</span>A(n) ____ is an operation the processor manages.</div>
+          <label class="option"><input type="radio" name="mc8" value="a"> a. buffer <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="b"> b. spool <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="c"> c. task <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="d"> d. event <span class="badge"></span></label>
+        </div>
+
+        <!-- 9 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc9" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">9)</span>The process called ____ sends print jobs to a buffer instead of sending them immediately to the printer.</div>
+          <label class="option"><input type="radio" name="mc9" value="a"> a. paging <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="b"> b. spooling <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="c"> c. swapping <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="d"> d. waiting <span class="badge"></span></label>
+        </div>
+
+        <!-- 10 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc10" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">10)</span>Multiple print jobs line up in a ______ within a buffer.</div>
+          <label class="option"><input type="radio" name="mc10" value="a"> a. queue <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="b"> b. row <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="c"> c. page <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="d"> d. virtual page <span class="badge"></span></label>
+        </div>
+
+        <!-- 11 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc11" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">11)</span>______ means the operating system automatically configures new devices as you install them.</div>
+          <label class="option"><input type="radio" name="mc11" value="a"> a. Virtual memory <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="b"> b. Operational buffering <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="c"> c. Page logging <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="d"> d. Plug and Play <span class="badge"></span></label>
+        </div>
+
+        <!-- 12 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc12" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">12)</span>A(n) ___ OS is an operating system that organizes and coordinates how multiple users access and share resources on a network.</div>
+          <label class="option"><input type="radio" name="mc12" value="a"> a. client <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="b"> b. multitasking <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="c"> c. integrated <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="d"> d. server <span class="badge"></span></label>
+        </div>
+
+        <!-- 13 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc13" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">13)</span>A network ____ uses the server operating system to add and remove users, computers, and other devices to and from the network.</div>
+          <label class="option"><input type="radio" name="mc13" value="a"> a. administrator <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="b"> b. owner <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="c"> c. client <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="d"> d. master <span class="badge"></span></label>
+        </div>
+
+        <!-- 14 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc14" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">14)</span>A ____ is a unique combination of characters that identifies one specific user.</div>
+          <label class="option"><input type="radio" name="mc14" value="a"> a. user name <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="b"> b. password <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="c"> c. client <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="d"> d. cycle <span class="badge"></span></label>
+        </div>
+
+        <!-- 15 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc15" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">15)</span>A performance ____ is a program that assesses and reports information about various computer resources and devices.</div>
+          <label class="option"><input type="radio" name="mc15" value="a"> a. monitor <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="b"> b. manager <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="c"> c. reporter <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="d"> d. roster <span class="badge"></span></label>
+        </div>
+
+        <!-- 16 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc16" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">16)</span>A ____ is a private combination of characters associated with the user name that allows access to certain computer resources.</div>
+          <label class="option"><input type="radio" name="mc16" value="a"> a. folder <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="b"> b. password <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="c"> c. user name <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="d"> d. cipher <span class="badge"></span></label>
+        </div>
+
+        <!-- 17 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc17" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">17)</span>Which of the following is not a utility function?</div>
+          <label class="option"><input type="radio" name="mc17" value="a"> a. managing files <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="b"> b. viewing images <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="c"> c. controlling the keyboard <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="d"> d. uninstalling programs <span class="badge"></span></label>
+        </div>
+
+        <!-- 18 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc18" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">18)</span>A(n) _____ is a utility that allows users to display, copy, and print the contents of a graphics file.</div>
+          <label class="option"><input type="radio" name="mc18" value="a"> a. video card <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="b"> b. video driver <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="c"> c. scanner <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="d"> d. image viewer <span class="badge"></span></label>
+        </div>
+
+        <!-- 19 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc19" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">19)</span>A file _____ is a utility that performs functions related to file management.</div>
+          <label class="option"><input type="radio" name="mc19" value="a"> a. monitor <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="b"> b. manager <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="c"> c. scanner <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="d"> d. controller <span class="badge"></span></label>
+        </div>
+
+        <!-- 20 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc20" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">20)</span>A(n) _____ is a utility that removes a program, as well as any associated entries in the system files.</div>
+          <label class="option"><input type="radio" name="mc20" value="a"> a. application remover <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="b"> b. application purger <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="c"> c. uninstaller <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="d"> d. antiapp utility <span class="badge"></span></label>
+        </div>
+
+        <!-- 21 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc21" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">21)</span>A disk ____ utility searches for and removes unnecessary files.</div>
+          <label class="option"><input type="radio" name="mc21" value="a"> a. diagnostic <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="b"> b. uninstaller <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="c"> c. operator <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="d"> d. cleanup <span class="badge"></span></label>
+        </div>
+
+        <!-- 22 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc22" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">22)</span>A screen ____ is a utility that causes a display device’s screen to show a moving image or blank screen if no keyboard or mouse activity occurs for a specified time.</div>
+          <label class="option"><input type="radio" name="mc22" value="a"> a. manager <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="b"> b. saver <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="c"> c. utility <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="d"> d. protector <span class="badge"></span></label>
+        </div>
+
+        <!-- 23 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc23" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">23)</span>A personal ____ is a utility that detects and protects a personal computer from unauthorized intrusions.</div>
+          <label class="option"><input type="radio" name="mc23" value="a"> a. firewall <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="b"> b. antihacker <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="c"> c. threat neutralizer <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="d"> d. protection utility <span class="badge"></span></label>
+        </div>
+
+        <!-- 24 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc24" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">24)</span>A(n) ____ utility identifies computer problems but does not repair them.</div>
+          <label class="option"><input type="radio" name="mc24" value="a"> a. troubleshooting <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="b"> b. executional <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="c"> c. operational <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="d"> d. diagnostic <span class="badge"></span></label>
+        </div>
+
+        <!-- 25 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc25" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">25)</span>A file ____ utility shrinks the size of a file.</div>
+          <label class="option"><input type="radio" name="mc25" value="a"> a. scanner <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="b"> b. compression <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="c"> c. defragmenter <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="d"> d. archiver <span class="badge"></span></label>
+        </div>
+
+        <!-- 26 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc26" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">26)</span>A personal computer ____ utility identifies and fixes operating system problems, detects and repairs disk problems, and includes the capability of improving a computer’s performance.</div>
+          <label class="option"><input type="radio" name="mc26" value="a"> a. maintenance <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="b"> b. multitasking <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="c"> c. functional <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="d"> d. proprietary <span class="badge"></span></label>
+        </div>
+
+        <!-- 27 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc27" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">27)</span>Which of the following is NOT a type of operating system?</div>
+          <label class="option"><input type="radio" name="mc27" value="a"> a. wireless <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="b"> b. stand-alone <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="c"> c. server <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="d"> d. embedded <span class="badge"></span></label>
+        </div>
+
+        <!-- 28 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc28" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">28)</span>The first version of Windows was developed in the mid-____.</div>
+          <label class="option"><input type="radio" name="mc28" value="a"> a. 1960s <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="b"> b. 1970s <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="c"> c. 1980s <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="d"> d. 1990s <span class="badge"></span></label>
+        </div>
+
+        <!-- 29 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc29" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">29)</span>A ____ operating system is a complete operating system that works on a desktop computer, a notebook computer, or mobile computing device.</div>
+          <label class="option"><input type="radio" name="mc29" value="a"> a. multitasking <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="b"> b. media-based <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="c"> c. single-user <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="d"> d. stand-alone <span class="badge"></span></label>
+        </div>
+
+        <!-- 30 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc30" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">30)</span>Which of the following is NOT an edition of Windows 7?</div>
+          <label class="option"><input type="radio" name="mc30" value="a"> a. Enterprise <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="b"> b. Ultimate <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="c"> c. Home Premium <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="d"> d. Starter <span class="badge"></span></label>
+        </div>
+
+        <!-- 31 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc31" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">31)</span>Apple’s latest operating system version, Mac ____, is a multitasking operating system available only for computers manufactured by Apple.</div>
+          <label class="option"><input type="radio" name="mc31" value="a"> a. Safari <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="b"> b. OS IX <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="c"> c. OS X <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="d"> d. OS XI <span class="badge"></span></label>
+        </div>
+
+        <!-- 32 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc32" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">32)</span>To defragment a disk means to ____.</div>
+          <label class="option"><input type="radio" name="mc32" value="a"> a. slow it down <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="b"> b. diagnose problems with it <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="c"> c. reorganize it <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="d"> d. repair it <span class="badge"></span></label>
+        </div>
+
+        <!-- 33 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc33" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">33)</span>The term ____ describes a potentially damaging computer program that affects, or infects, a computer negatively by altering the way the computer works without the user’s knowledge or permission.</div>
+          <label class="option"><input type="radio" name="mc33" value="a"> a. firewall <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="b"> b. agent <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="c"> c. virus <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="d"> d. spyware <span class="badge"></span></label>
+        </div>
+
+        <!-- 34 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc34" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">34)</span>____ is a program that displays an online advertisement in a banner or pop-up window on Web pages, e-mail, or other Internet services.</div>
+          <label class="option"><input type="radio" name="mc34" value="a"> a. Compression software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="b"> b. Symbianware <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="c"> c. Resident software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="d"> d. Adware <span class="badge"></span></label>
+        </div>
+
+        <!-- 35 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc35" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">35)</span>To ___ a file, you restore a zipped file to its original form.</div>
+          <label class="option"><input type="radio" name="mc35" value="a"> a. restore <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="b"> b. archive <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="c"> c. zip <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="d"> d. uncompress <span class="badge"></span></label>
+        </div>
+
+        <!-- 36 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc36" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">36)</span>A pop-up ___ is a filtering program that stops pop-up ads from displaying on Web pages.</div>
+          <label class="option"><input type="radio" name="mc36" value="a"> a. blocker <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="b"> b. driver <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="c"> c. stopper <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="d"> d. monitor <span class="badge"></span></label>
+        </div>
+
+        <!-- 37 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc37" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">37)</span>Compressed files sometimes are called ___ files.</div>
+          <label class="option"><input type="radio" name="mc37" value="a"> a. skipped <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="b"> b. controlled <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="c"> c. zipped <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="d"> d. defragmented <span class="badge"></span></label>
+        </div>
+
+        <!-- 38 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc38" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">38)</span>___ is a popular stand-alone file compression utility.</div>
+          <label class="option"><input type="radio" name="mc38" value="a"> a. Smasher <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="b"> b. PKZIP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="c"> c. CompUtil <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="d"> d. All of the above <span class="badge"></span></label>
+        </div>
+
+        <!-- 39 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc39" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">39)</span>___ is a scam in which a perpetrator attempts to obtain your personal and/or financial information.</div>
+          <label class="option"><input type="radio" name="mc39" value="a"> a. Phishing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="b"> b. Zipping <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="c"> c. Pharming <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="d"> d. Authenticating <span class="badge"></span></label>
+        </div>
+
+        <!-- 40 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc40" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">40)</span>A(n) ___ filter is a program that warns or blocks you from potentially fraudulent or suspicious Web sites.</div>
+          <label class="option"><input type="radio" name="mc40" value="a"> a. operating <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="b"> b. phishing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="c"> c. zipping <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="d"> d. antispam <span class="badge"></span></label>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="tf" aria-labelledby="tf-title">
+      <div class="section-title">
+        <h2 id="tf-title">أسئلة الصح والخطأ (25 سؤال)</h2>
+        <span class="muted">اختر (T) صح أو (F) خطأ</span>
+      </div>
+      <div class="grid">
+        <!-- 25 T/F from the user's list -->
+        <div class="card question-card" data-type="tf" data-qid="tf1" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">1)</span>On mobile devices, the operating system may reside on a RAM chip.</div>
+          <label class="option"><input type="radio" name="tf1" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf1" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf2" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">2)</span>The boot process is similar for large and small computers.</div>
+          <label class="option"><input type="radio" name="tf2" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf2" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf3" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">3)</span>In a multitasking environment, many programs run in the foreground, while one program remains in the background.</div>
+          <label class="option"><input type="radio" name="tf3" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf3" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf4" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">4)</span>One drawback of multiprocessing is that it tends to reduce a computer’s processing speed.</div>
+          <label class="option"><input type="radio" name="tf4" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf4" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf5" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">5)</span>Because virtual memory is faster than RAM, users may notice the computer speeding up while it uses virtual memory.</div>
+          <label class="option"><input type="radio" name="tf5" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf5" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf6" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">6)</span>Multiuser operating systems always process jobs on a first-come, first-served basis.</div>
+          <label class="option"><input type="radio" name="tf6" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf6" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf7" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">7)</span>While waiting for devices to become idle, the operating system places items in buffers.</div>
+          <label class="option"><input type="radio" name="tf7" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf7" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf8" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">8)</span>If a printer does not have its own internal memory or if its memory is full, the operating system’s buffer holds the information waiting to print while the printer prints from the buffer at its own rate of speed.</div>
+          <label class="option"><input type="radio" name="tf8" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf8" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf9" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">9)</span>Virtual memory is faster than RAM.</div>
+          <label class="option"><input type="radio" name="tf9" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf9" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf10" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">10)</span>The operating system determines the order in which tasks are processed.</div>
+          <label class="option"><input type="radio" name="tf10" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf10" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf11" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">11)</span>If you attach a new device to a computer, its driver must be installed before you can use the device.</div>
+          <label class="option"><input type="radio" name="tf11" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf11" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf12" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">12)</span>A network administrator is a program that monitors network performance.</div>
+          <label class="option"><input type="radio" name="tf12" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf12" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf13" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">13)</span>Encryption is the process of encoding data and information into an unreadable form.</div>
+          <label class="option"><input type="radio" name="tf13" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf13" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf14" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">14)</span>Windows 7 is available in several editions, which are grouped in two general categories: Embedded and Personal.</div>
+          <label class="option"><input type="radio" name="tf14" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf14" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf15" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">15)</span>Linux is an example of proprietary software, which means that its code is available to the public.</div>
+          <label class="option"><input type="radio" name="tf15" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf15" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf16" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">16)</span>Windows Embedded CE is designed for use on computing devices with limited functionality.</div>
+          <label class="option"><input type="radio" name="tf16" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf16" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf17" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">17)</span>Palm OS is an example of a stand-alone operating system.</div>
+          <label class="option"><input type="radio" name="tf17" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf17" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf18" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">18)</span>Utility programs are considered to be application software.</div>
+          <label class="option"><input type="radio" name="tf18" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf18" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf19" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">19)</span>A disk scanner is a utility that removes a program from system files.</div>
+          <label class="option"><input type="radio" name="tf19" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf19" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf20" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">20)</span>Fragmentation slows down disk access and the performance of the entire computer.</div>
+          <label class="option"><input type="radio" name="tf20" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf20" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf21" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">21)</span>Some operating systems include a built-in firewall to protect the computer from unauthorized intrusions.</div>
+          <label class="option"><input type="radio" name="tf21" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf21" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf22" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">22)</span>Screen savers originally were developed to prevent a problem called etching, in which images could be permanently etched on a monitor’s screen.</div>
+          <label class="option"><input type="radio" name="tf22" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf22" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf23" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">23)</span>Most antivirus programs also protect against worms and Trojan horses.</div>
+          <label class="option"><input type="radio" name="tf23" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf23" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf24" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">24)</span>An anti-spam program restricts access to certain material on the Web.</div>
+          <label class="option"><input type="radio" name="tf24" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf24" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+        <div class="card question-card" data-type="tf" data-qid="tf25" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">25)</span>Uncompressing a file is the same as zipping a file.</div>
+          <label class="option"><input type="radio" name="tf25" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf25" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+      </div>
+
+      <div class="actions" style="margin-top:18px">
+        <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+        <button class="btn secondary" onclick="resetQuiz()">مسح الاختيارات</button>
+      </div>
+    </section>
+
+    <section id="resultBox" aria-labelledby="res-title">
+      <div class="card" data-aos="fade-up">
+        <div class="section-title">
+          <h2 id="res-title">نتيجتك</h2>
+          <span class="muted">تفاصيل الدرجات بعد التصحيح</span>
+        </div>
+        <div class="results" id="results">
+          <div class="score" id="scoreLine">—</div>
+          <div class="muted" id="detailLine" style="margin-top:6px">—</div>
+          <div class="muted" id="tipLine" style="margin-top:6px">الأسئلة غير المُجابة تظهر بإطار أصفر.</div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn" onclick="scrollToTop()">العودة للأعلى</button>
+            <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div>© Operating Systems Quiz</div>
+    <div class="made">صُنعت بالحب بواسطة جيمي 💙</div>
+  </footer>
+  <!-- AOS + App JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 500, easing: 'ease-out' });
+
+    const drawer = document.getElementById('drawer');
+    const burger = document.querySelector('.hamburger');
+    function toggleDrawer(forceState){
+      const willOpen = (typeof forceState==='boolean') ? forceState : !drawer.classList.contains('open');
+      drawer.classList.toggle('open', willOpen);
+      burger.setAttribute('aria-expanded', String(willOpen));
+      drawer.setAttribute('aria-hidden', String(!willOpen));
+    }
+    burger.addEventListener('click', () => toggleDrawer());
+
+    function clearColors(card){
+      card.classList.remove('unanswered');
+      card.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('correct','incorrect');
+        const badge = opt.querySelector('.badge'); if (badge) badge.textContent = '';
+      });
+    }
+
+    function gradeSection(selector){
+      const cards = Array.from(document.querySelectorAll(selector));
+      let total = cards.length, correct = 0, unanswered = 0;
+      cards.forEach(card => {
+        clearColors(card);
+        const type = card.dataset.type;
+        const qid = card.dataset.qid;
+        const answer = card.dataset.answer; // 'a'/'b'/... or 'T'/'F'
+        const chosen = card.querySelector('input[type="radio"]:checked');
+        if(!chosen){
+          unanswered++;
+          card.classList.add('unanswered');
+          // Reveal the correct option in green for learning
+          const corrLabel = card.querySelector('input[value="'+answer+'"]')?.closest('.option');
+          if(corrLabel){ corrLabel.classList.add('correct'); corrLabel.querySelector('.badge').textContent = '✓'; }
+          return;
+        }
+        const chosenVal = chosen.value;
+        const chosenLabel = chosen.closest('.option');
+        const correctLabel = card.querySelector('input[value="'+answer+'"]')?.closest('.option');
+        if(chosenVal === answer){
+          correct++;
+          chosenLabel.classList.add('correct');
+          chosenLabel.querySelector('.badge').textContent = '✓';
+        }else{
+          chosenLabel.classList.add('incorrect');
+          chosenLabel.querySelector('.badge').textContent = '✗';
+          if(correctLabel){ correctLabel.classList.add('correct'); correctLabel.querySelector('.badge').textContent = '✓'; }
+        }
+      });
+      return {total, correct, unanswered, wrong: total - correct - unanswered};
+    }
+
+    function gradeAll(){
+      const r1 = gradeSection('#mcq .question-card');
+      const r2 = gradeSection('#tf .question-card');
+      const totalQ = r1.total + r2.total;
+      const correct = r1.correct + r2.correct;
+      const unanswered = r1.unanswered + r2.unanswered;
+      const wrong = totalQ - correct - unanswered;
+      const percent = Math.round((correct/totalQ)*100);
+
+      const results = document.getElementById('results');
+      const scoreLine = document.getElementById('scoreLine');
+      const detailLine = document.getElementById('detailLine');
+      scoreLine.textContent = `الدرجة الكلية: ${correct} / ${totalQ} (${percent}%)`;
+      detailLine.textContent = `اختياري: ${r1.correct}/${r1.total} — صح/خطأ: ${r2.correct}/${r2.total} — أخطاء: ${wrong} — غير مُجاب: ${unanswered}`;
+      results.classList.add('show');
+      document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+    }
+
+    function resetQuiz(){
+      document.querySelectorAll('.question-card').forEach(card => {
+        clearColors(card);
+        card.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      });
+      document.getElementById('results').classList.remove('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+  </script>
+</body>
+</html>
