@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>انترو تو كمبيوتر ساينس — Chapter 11 Quiz (Systems & Programming)</title>
+  <!-- AOS animate on scroll -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#0b1b3b;
+      --bg-2:#0f2556;
+      --accent:#1e88e5;
+      --accent-2:#64b5f6;
+      --ink:#eaf4ff;
+      --muted:#b9d7ff;
+      --card:#0f1f45;
+      --border:#1d3b7a;
+      --green:#1db954;
+      --green-bg:#0f3d25;
+      --red:#ff5252;
+      --red-bg:#3a0f15;
+      --yellow:#ffca28;
+      --shadow:0 10px 28px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,var(--bg),var(--bg-2));color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Tahoma,Arial;scroll-behavior:smooth}
+    a{color:var(--accent-2);text-decoration:none}
+    a:hover{opacity:.9}
+    .container{max-width:1100px;margin:0 auto;padding:18px}
+    /* NAVBAR */
+    .nav{
+      position:sticky;top:0;z-index:9999;
+      backdrop-filter: blur(10px);
+      background:rgba(7,15,36,.6);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;padding-inline:12px}
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px
+    }
+    .brand .logo{
+      width:28px;height:28px;border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:inline-block;box-shadow:0 2px 10px rgba(30,136,229,.35)
+    }
+    .nav-links{
+      display:flex;gap:14px;align-items:center;
+    }
+    .nav-links a{padding:8px 10px;border-radius:10px}
+    .nav-links a:hover{background:rgba(255,255,255,.07)}
+    /* Hamburger */
+    .hamburger{
+      display:none;cursor:pointer;border:none;background:transparent;padding:8px;border-radius:10px
+    }
+    .hamburger:focus{outline:2px solid var(--accent)}
+    .hamburger span,.hamburger span:before,.hamburger span:after{
+      display:block;width:22px;height:2px;background:var(--ink);position:relative;transition:.25s
+    }
+    .hamburger span:before,.hamburger span:after{content:"";position:absolute;left:0}
+    .hamburger span:before{top:-6px}
+    .hamburger span:after{top:6px}
+    /* Mobile drawer */
+    .drawer{
+      position:fixed;inset:56px 0 auto 0; /* below navbar */
+      background:rgba(7,15,36,.96);border-top:1px solid rgba(255,255,255,.06);
+      transform:translateY(-110%);transition:transform .25s ease;z-index:9998
+    }
+    .drawer.open{transform:translateY(0)}
+    .drawer .drawer-links{display:flex;flex-direction:column;padding:14px 18px;gap:8px}
+    .drawer .drawer-links a{padding:12px;border-radius:12px;background:rgba(255,255,255,.06)}
+    /* HERO */
+    .hero{padding:36px 18px 10px}
+    .hero .title{
+      font-size:clamp(24px,4vw,40px);font-weight:900;line-height:1.1;margin:6px 0;
+      background:linear-gradient(135deg,#fff,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent
+    }
+    .hero .subtitle{color:var(--muted);max-width:800px}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(100,181,246,.18);color:#daf0ff;border:1px solid rgba(100,181,246,.35);
+      padding:8px 12px;border-radius:999px;font-size:13px
+    }
+    .btn{
+      appearance:none;border:none;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;color:#08142c;
+      background:linear-gradient(135deg,#7cc2ff,#1e88e5);box-shadow:0 10px 24px rgba(30,136,229,.35)
+    }
+    .btn:hover{filter:brightness(1.02)}
+    .btn.secondary{background:rgba(255,255,255,.12);color:var(--ink);border:1px solid rgba(255,255,255,.18);box-shadow:none}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    /* SECTIONS */
+    section{padding:10px 0 30px}
+    .card{
+      background:linear-gradient(180deg,var(--card),#0b1b3b);
+      border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px
+    }
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .q-num{font-weight:800;color:var(--muted);margin-inline-end:8px}
+    .q-text{font-weight:700;margin-bottom:12px}
+    .option{
+      display:flex;align-items:flex-start;gap:10px;padding:10px 12px;margin:8px 0;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.03);
+      transition:.2s
+    }
+    .option:hover{background:rgba(255,255,255,.06)}
+    .option input{transform:translateY(3px);accent-color:var(--accent)}
+    /* Result colors */
+    .option.correct{border-color:rgba(29,185,84,.85);background:var(--green-bg)}
+    .option.incorrect{border-color:rgba(255,82,82,.9);background:var(--red-bg)}
+    .option.correct .badge{color:var(--green)}
+    .option.incorrect .badge{color:var(--red)}
+    .badge{font-weight:900;margin-inline-start:auto}
+    .question-card.unanswered{outline:2px dashed var(--yellow);outline-offset:3px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 12px}
+    .muted{color:var(--muted);font-size:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .results{
+      display:none;margin-top:14px;padding:14px;border-radius:14px;
+      background:linear-gradient(180deg,#0f2d62,#0b1b3b);border:1px solid var(--border)
+    }
+    .results.show{display:block}
+    .score{font-weight:900;font-size:18px}
+    .footer{ text-align:center;color:var(--muted);padding:30px 12px 60px }
+    .made{margin-top:6px;color:#9fe0ff}
+    /* Responsive */
+    @media (min-width: 720px){
+      .grid{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 860px){
+      .nav-links{display:none}
+      .hamburger{display:block}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand"><span class="logo" aria-hidden="true"></span>انترو تو كمبيوتر ساينس</div>
+      <div class="nav-links" aria-label="روابط">
+        <a href="#mcq">اختياري</a>
+        <a href="#tf">صح/خطأ</a>
+        <a href="#resultBox">النتيجة</a>
+      </div>
+      <button class="hamburger" aria-label="فتح وإغلاق القائمة" aria-expanded="false"><span></span></button>
+    </div>
+    <div class="drawer" id="drawer" aria-hidden="true">
+      <div class="drawer-links">
+        <a href="#mcq" onclick="toggleDrawer(false)">اختياري</a>
+        <a href="#tf" onclick="toggleDrawer(false)">صح/خطأ</a>
+        <a href="#resultBox" onclick="toggleDrawer(false)">النتيجة</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container">
+    <div class="chip" data-aos="fade-down">Chapter 11 — Systems Development & Programming</div>
+    <h1 class="title" data-aos="fade-up">اختبار الفصل الحادي عشر (40 اختيار من متعدد + 25 صح/خطأ)</h1>
+    <p class="subtitle" data-aos="fade-up" data-aos-delay="80">
+      جاوب وبعدين اضغط <strong>عرض النتيجة</strong>. الصح باللون الأخضر والخطأ باللون الأحمر.
+      الواجهة موحدة تمامًا مع الصفحات السابقة + شغّالة على الموبايل مع زر همبورجر.
+    </p>
+    <div class="actions" data-aos="fade-up" data-aos-delay="120">
+      <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+      <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="mcq" aria-labelledby="mcq-title">
+      <div class="section-title">
+        <h2 id="mcq-title">الأسئلة الاختيارية (40 سؤال)</h2>
+        <span class="muted">اختر إجابة واحدة لكل سؤال</span>
+      </div>
+      <div class="grid">
+        <!-- 40 MCQ -->
+        <!-- 1 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc1" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">1)</span>A(n) ______ is a set of components that interact to achieve a common goal.</div>
+          <label class="option"><input type="radio" name="mc1" value="a"> a. system <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="b"> b. feature <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="c"> c. implementation <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="d"> d. function <span class="badge"></span></label>
+        </div>
+
+        <!-- 2 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc2" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">2)</span>Which is not a phase of system development?</div>
+          <label class="option"><input type="radio" name="mc2" value="a"> a. analysis <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="b"> b. support <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="c"> c. debugging <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="d"> d. design <span class="badge"></span></label>
+        </div>
+
+        <!-- 3 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc3" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">3)</span>The system ______ life cycle is a set of activities used to build an information system.</div>
+          <label class="option"><input type="radio" name="mc3" value="a"> a. production <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="b"> b. synthesis <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="c"> c. development <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="d"> d. analysis <span class="badge"></span></label>
+        </div>
+
+        <!-- 4 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc4" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">4)</span>Which is NOT a major activity of the planning phase?</div>
+          <label class="option"><input type="radio" name="mc4" value="a"> a. review and approve project requests <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="b"> b. prioritize the project requests <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="c"> c. study how the current system works <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="d"> d. form a project development team <span class="badge"></span></label>
+        </div>
+
+        <!-- 5 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc5" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">5)</span>System development should include ____.</div>
+          <label class="option"><input type="radio" name="mc5" value="a"> a. representatives from each department <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="b"> b. nontechnical users <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="c"> c. IT professionals <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="d"> d. all of the above <span class="badge"></span></label>
+        </div>
+
+        <!-- 6 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc6" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">6)</span>_____ include anyone for whom the system is being built.</div>
+          <label class="option"><input type="radio" name="mc6" value="a"> a. Users <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="b"> b. Producers <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="c"> c. Managers <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="d"> d. Standards <span class="badge"></span></label>
+        </div>
+
+        <!-- 7 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc7" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">7)</span>One member of a project team is the ____, who manages and controls the budget and schedule.</div>
+          <label class="option"><input type="radio" name="mc7" value="a"> a. leader <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="b"> b. comptroller <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="c"> c. assistant <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="d"> d. analyst <span class="badge"></span></label>
+        </div>
+
+        <!-- 8 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc8" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">8)</span>Project ____ is the process of planning, scheduling, and controlling activities during system development.</div>
+          <label class="option"><input type="radio" name="mc8" value="a"> a. direction <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="b"> b. management <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="c"> c. clustering <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="d"> d. analysis <span class="badge"></span></label>
+        </div>
+
+        <!-- 9 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc9" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">9)</span>____ is the collection and summarization of data and information.</div>
+          <label class="option"><input type="radio" name="mc9" value="a"> a. Documentation <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="b"> b. Resolution <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="c"> c. Presentation <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="d"> d. Feasibility <span class="badge"></span></label>
+        </div>
+
+        <!-- 10 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc10" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">10)</span>In large companies, users write a formal request for a new or modified information system called a ______ request.</div>
+          <label class="option"><input type="radio" name="mc10" value="a"> a. system <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="b"> b. IS <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="c"> c. project <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="d"> d. corporate <span class="badge"></span></label>
+        </div>
+
+        <!-- 11 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc11" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">11)</span>The purpose of the system ______ is to assess the feasibility of each alternative solution.</div>
+          <label class="option"><input type="radio" name="mc11" value="a"> a. index <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="b"> b. repository <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="c"> c. decision tree <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="d"> d. proposal <span class="badge"></span></label>
+        </div>
+
+        <!-- 12 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc12" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">12)</span>______ software is mass-produced, copyrighted, or prewritten software available for purchase.</div>
+          <label class="option"><input type="radio" name="mc12" value="a"> a. Custom <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="b"> b. Packaged <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="c"> c. Demand <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="d"> d. Requested <span class="badge"></span></label>
+        </div>
+
+        <!-- 13 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc13" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">13)</span>Which is NOT a major activity of detailed analysis?</div>
+          <label class="option"><input type="radio" name="mc13" value="a"> a. study how the current system works <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="b"> b. recommend a solution <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="c"> c. determine the users' wants, needs, and requirements <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="d"> d. prioritize the project requests <span class="badge"></span></label>
+        </div>
+
+        <!-- 14 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc14" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">14)</span>Application software developed by the user or at the user's request is called ____ software.</div>
+          <label class="option"><input type="radio" name="mc14" value="a"> a. packaged <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="b"> b. optimized <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="c"> c. custom <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="d"> d. remastered <span class="badge"></span></label>
+        </div>
+
+        <!-- 15 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc15" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">15)</span>The first step in acquiring necessary hardware and software is to ____.</div>
+          <label class="option"><input type="radio" name="mc15" value="a"> a. identify technical specifications <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="b"> b. solicit vendor proposals <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="c"> c. test and evaluate vendor proposals <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="d"> d. summarize the requirements for potential vendors <span class="badge"></span></label>
+        </div>
+
+        <!-- 16 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc16" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">16)</span>Which is not a document type that analysts use to summarize the hardware and software requirements?</div>
+          <label class="option"><input type="radio" name="mc16" value="a"> a. RFQ <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="b"> b. RFP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="c"> c. RFI <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="d"> d. RFF <span class="badge"></span></label>
+        </div>
+
+        <!-- 17 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc17" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">17)</span>A(n) ____ is a publication available on the Web.</div>
+          <label class="option"><input type="radio" name="mc17" value="a"> a. webpub <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="b"> b. e-zine <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="c"> c. Internet magazine <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="d"> d. Internet pub <span class="badge"></span></label>
+        </div>
+
+        <!-- 18 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc18" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">18)</span>A(n) ____ is a working model of the proposed system.</div>
+          <label class="option"><input type="radio" name="mc18" value="a"> a. adaptation <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="b"> b. prototype <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="c"> c. mockup <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="d"> d. feasibility scheme <span class="badge"></span></label>
+        </div>
+
+        <!-- 19 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc19" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">19)</span>____ products are software tools designed to support one or more activities of the system development cycle.</div>
+          <label class="option"><input type="radio" name="mc19" value="a"> a. Feasibility <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="b"> b. Prototyping <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="c"> c. CASE <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="d"> d. Mockup <span class="badge"></span></label>
+        </div>
+
+        <!-- 20 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc20" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">20)</span>Companies today often have a(n) ____ who is responsible for physical security of a company's property.</div>
+          <label class="option"><input type="radio" name="mc20" value="a"> a. CIT <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="b"> b. CSO <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="c"> c. CTO <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="d"> d. CRO <span class="badge"></span></label>
+        </div>
+
+        <!-- 21 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc21" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">21)</span>A computer ____ plan summarizes in writing all the safeguards that are in place to protect a company's information assets.</div>
+          <label class="option"><input type="radio" name="mc21" value="a"> a. protection <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="b"> b. lockdown <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="c"> c. security <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="d"> d. safeguard <span class="badge"></span></label>
+        </div>
+
+        <!-- 22 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc22" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">22)</span>Which of the following elements of an information system must be kept secure from threats?</div>
+          <label class="option"><input type="radio" name="mc22" value="a"> a. hardware and software <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="b"> b. data <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="c"> c. people and procedures <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="d"> d. all of the above <span class="badge"></span></label>
+        </div>
+
+        <!-- 23 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc23" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">23)</span>To convert an assembly language source program into machine language, programmers use a program called a(n) ______.</div>
+          <label class="option"><input type="radio" name="mc23" value="a"> a. source reader <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="b"> b. compiler <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="c"> c. interpreter <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="d"> d. assembler <span class="badge"></span></label>
+        </div>
+
+        <!-- 24 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc24" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">24)</span>A(n) ______ program is the program that contains the language instructions, or code, to be converted.</div>
+          <label class="option"><input type="radio" name="mc24" value="a"> a. indexed <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="b"> b. baseline <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="c"> c. source <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="d"> d. master <span class="badge"></span></label>
+        </div>
+
+        <!-- 25 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc25" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">25)</span>The ______ programming language was originally designed for writing system software.</div>
+          <label class="option"><input type="radio" name="mc25" value="a"> a. C <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="b"> b. BASIC <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="c"> c. COBOL <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="d"> d. Fortran <span class="badge"></span></label>
+        </div>
+
+        <!-- 26 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc26" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">26)</span>______ is a programming language designed for business applications.</div>
+          <label class="option"><input type="radio" name="mc26" value="a"> a. C <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="b"> b. BASIC <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="c"> c. COBOL <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="d"> d. Fortran <span class="badge"></span></label>
+        </div>
+
+        <!-- 27 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc27" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">27)</span>Programmers use a(n) ___ to implement objects in a program.</div>
+          <label class="option"><input type="radio" name="mc27" value="a"> a. MDP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="b"> b. ASP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="c"> c. LDP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="d"> d. OOP <span class="badge"></span></label>
+        </div>
+
+        <!-- 28 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc28" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">28)</span>___ is a method of developing software in segments instead of waiting until the entire program is completed.</div>
+          <label class="option"><input type="radio" name="mc28" value="a"> a. RAD <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="b"> b. RPG <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="c"> c. JIT <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="d"> d. VPE <span class="badge"></span></label>
+        </div>
+
+        <!-- 29 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc29" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">29)</span>A major benefit of OOP is the ability to ___. </div>
+          <label class="option"><input type="radio" name="mc29" value="a"> a. write code that executes very fast <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="b"> b. reuse and modify existing objects <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="c"> c. write code that uses very little memory <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="d"> d. write system software <span class="badge"></span></label>
+        </div>
+
+        <!-- 30 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc30" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">30)</span>___ was developed by Sun Microsystems.</div>
+          <label class="option"><input type="radio" name="mc30" value="a"> a. Java <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="b"> b. C++ <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="c"> c. COBOL <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="d"> d. C <span class="badge"></span></label>
+        </div>
+
+        <!-- 31 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc31" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">31)</span>Examples of ___ include Mindscript and Prograph.</div>
+          <label class="option"><input type="radio" name="mc31" value="a"> a. 4GLs <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="b"> b. visual programming languages <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="c"> c. OOP languages <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="d"> d. procedural languages <span class="badge"></span></label>
+        </div>
+
+        <!-- 32 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc32" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">32)</span>A(n) ___ programming language uses a graphical interface for creating all source code.</div>
+          <label class="option"><input type="radio" name="mc32" value="a"> a. graphical <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="b"> b. onscreen <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="c"> c. visual <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="d"> d. command-line <span class="badge"></span></label>
+        </div>
+
+        <!-- 33 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc33" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">33)</span>___ is a 4GL.</div>
+          <label class="option"><input type="radio" name="mc33" value="a"> a. C <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="b"> b. SQL <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="c"> c. COBOL <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="d"> d. RPG <span class="badge"></span></label>
+        </div>
+
+        <!-- 34 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc34" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">34)</span>An application ___ is a program that creates source code or machine code from a specification.</div>
+          <label class="option"><input type="radio" name="mc34" value="a"> a. compiler <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="b"> b. generator <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="c"> c. debugger <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="d"> d. all of the above <span class="badge"></span></label>
+        </div>
+
+        <!-- 35 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc35" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">35)</span>A ___ is a series of statements that instructs an application how to complete a task.</div>
+          <label class="option"><input type="radio" name="mc35" value="a"> a. program <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="b"> b. macro <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="c"> c. machine code <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="d"> d. record <span class="badge"></span></label>
+        </div>
+
+        <!-- 36 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc36" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">36)</span>______ is a special formatting language that programmers use to format documents for display on the Web.</div>
+          <label class="option"><input type="radio" name="mc36" value="a"> a. Java <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="b"> b. JavaScript <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="c"> c. HTML <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="d"> d. XML <span class="badge"></span></label>
+        </div>
+
+        <!-- 37 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc37" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">37)</span>Which of the following is not a scripting language?</div>
+          <label class="option"><input type="radio" name="mc37" value="a"> a. HTML <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="b"> b. Rexx <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="c"> c. Tel <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="d"> d. Perl <span class="badge"></span></label>
+        </div>
+
+        <!-- 38 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc38" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">38)</span>______ is a method of creating interactive Web applications designed to provide immediate response.</div>
+          <label class="option"><input type="radio" name="mc38" value="a"> a. XML <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="b"> b. DHTML <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="c"> c. JavaScript <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="d"> d. Ajax <span class="badge"></span></label>
+        </div>
+
+        <!-- 39 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc39" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">39)</span>A ______ control structure tells the program which action to take, based on a certain condition.</div>
+          <label class="option"><input type="radio" name="mc39" value="a"> a. selection <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="b"> b. sequence <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="c"> c. loop <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="d"> d. repetition <span class="badge"></span></label>
+        </div>
+
+        <!-- 40 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc40" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">40)</span>The ______ control structure enables a program to perform one or more actions repeatedly.</div>
+          <label class="option"><input type="radio" name="mc40" value="a"> a. repetition <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="b"> b. sequence <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="c"> c. selection <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="d"> d. compliance <span class="badge"></span></label>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="tf" aria-labelledby="tf-title">
+      <div class="section-title">
+        <h2 id="tf-title">أسئلة الصح والخطأ (25 سؤال)</h2>
+        <span class="muted">اختر (T) صح أو (F) خطأ</span>
+      </div>
+      <div class="grid">
+        <!-- 25 T/F (Chapter 11) -->
+        <div class="card question-card" data-type="tf" data-qid="tf1" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">1)</span>The first stage of system development is called implementation.</div>
+          <label class="option"><input type="radio" name="tf1" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf1" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf2" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">2)</span>Many SDLCs consist of five phases.</div>
+          <label class="option"><input type="radio" name="tf2" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf2" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf3" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">3)</span>In the system development life cycle, activities within adjacent phases often interact with one another.</div>
+          <label class="option"><input type="radio" name="tf3" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf3" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf4" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">4)</span>For each system development project, a company usually forms a project team to work on the project from beginning to end.</div>
+          <label class="option"><input type="radio" name="tf4" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf4" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf5" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">5)</span>Cost/benefit feasibility also is called technical feasibility.</div>
+          <label class="option"><input type="radio" name="tf5" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf5" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf6" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">6)</span>Operational feasibility measures whether or not the company has or can obtain the resources needed.</div>
+          <label class="option"><input type="radio" name="tf6" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf6" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf7" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">7)</span>An RFP uses a standard form to request information about a product or service.</div>
+          <label class="option"><input type="radio" name="tf7" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf7" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf8" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">8)</span>Benchmark tests measure the performance of hardware; they are not used for evaluating software.</div>
+          <label class="option"><input type="radio" name="tf8" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf8" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf9" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">9)</span>A layout chart is more technical than a mockup and contains programming-like notations.</div>
+          <label class="option"><input type="radio" name="tf9" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf9" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf10" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">10)</span>Detailed design specifications should be reviewed only by the senior systems analyst and members of the project team.</div>
+          <label class="option"><input type="radio" name="tf10" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf10" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf11" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">11)</span>A unit test verifies that each individual program or object works by itself.</div>
+          <label class="option"><input type="radio" name="tf11" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf11" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf12" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">12)</span>An integration test verifies that all programs in an application work with other applications.</div>
+          <label class="option"><input type="radio" name="tf12" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf12" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf13" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">13)</span>The two types of programming languages are low-level and high-level.</div>
+          <label class="option"><input type="radio" name="tf13" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf13" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf14" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">14)</span>A programmer must convert machine language into assembly language before the computer can execute the program.</div>
+          <label class="option"><input type="radio" name="tf14" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf14" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf15" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">15)</span>In a procedural language, the programmer uses a series of English-like words to write instructions.</div>
+          <label class="option"><input type="radio" name="tf15" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf15" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf16" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">16)</span>The translation process for 3GL source programs is fairly simple.</div>
+          <label class="option"><input type="radio" name="tf16" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf16" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf17" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">17)</span>The machine language version that results from compiling a 3GL is called source code.</div>
+          <label class="option"><input type="radio" name="tf17" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf17" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf18" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">18)</span>The main disadvantage of compiled programs is that they do not run as fast as interpreted programs.</div>
+          <label class="option"><input type="radio" name="tf18" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf18" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf19" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">19)</span>C programs run on almost any type of computer with any operating system.</div>
+          <label class="option"><input type="radio" name="tf19" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf19" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf20" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">20)</span>C++ includes all the elements of the C language plus it has additional features for working with objects.</div>
+          <label class="option"><input type="radio" name="tf20" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf20" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf21" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">21)</span>Application generators most often are bundled with or are included as part of a DBMS.</div>
+          <label class="option"><input type="radio" name="tf21" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf21" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf22" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">22)</span>One application of XML is the RSS 2.0 specification.</div>
+          <label class="option"><input type="radio" name="tf22" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf22" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf23" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">23)</span>Typically, Web pages created with DHTML are more animated and responsive to user interaction.</div>
+          <label class="option"><input type="radio" name="tf23" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf23" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf24" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">24)</span>Instead of updating only changes to the Web page, Ajax refreshes entire Web pages.</div>
+          <label class="option"><input type="radio" name="tf24" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf24" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <div class="card question-card" data-type="tf" data-qid="tf25" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">25)</span>Program development is an ongoing process within system development.</div>
+          <label class="option"><input type="radio" name="tf25" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf25" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+      </div>
+
+      <div class="actions" style="margin-top:18px">
+        <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+        <button class="btn secondary" onclick="resetQuiz()">مسح الاختيارات</button>
+      </div>
+    </section>
+
+    <section id="resultBox" aria-labelledby="res-title">
+      <div class="card" data-aos="fade-up">
+        <div class="section-title">
+          <h2 id="res-title">نتيجتك</h2>
+          <span class="muted">تفاصيل الدرجات بعد التصحيح</span>
+        </div>
+        <div class="results" id="results">
+          <div class="score" id="scoreLine">—</div>
+          <div class="muted" id="detailLine" style="margin-top:6px">—</div>
+          <div class="muted" id="tipLine" style="margin-top:6px">الأسئلة غير المُجابة تظهر بإطار أصفر.</div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn" onclick="scrollToTop()">العودة للأعلى</button>
+            <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div>© Chapter 11 Quiz</div>
+    <div class="made">ثيم موحّد عبر كل الصفحات 💙</div>
+  </footer>
+
+  <!-- AOS + App JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 500, easing: 'ease-out' });
+
+    const drawer = document.getElementById('drawer');
+    const burger = document.querySelector('.hamburger');
+    function toggleDrawer(forceState){
+      const willOpen = (typeof forceState==='boolean') ? forceState : !drawer.classList.contains('open');
+      drawer.classList.toggle('open', willOpen);
+      burger.setAttribute('aria-expanded', String(willOpen));
+      drawer.setAttribute('aria-hidden', String(!willOpen));
+    }
+    burger.addEventListener('click', () => toggleDrawer());
+
+    function clearColors(card){
+      card.classList.remove('unanswered');
+      card.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('correct','incorrect');
+        const badge = opt.querySelector('.badge'); if (badge) badge.textContent = '';
+      });
+    }
+
+    function gradeSection(selector){
+      const cards = Array.from(document.querySelectorAll(selector));
+      let total = cards.length, correct = 0, unanswered = 0;
+      cards.forEach(card => {
+        clearColors(card);
+        const answer = card.dataset.answer; // 'a'/'b'/... or 'T'/'F'
+        const chosen = card.querySelector('input[type="radio"]:checked');
+        if(!chosen){
+          unanswered++;
+          card.classList.add('unanswered');
+          const corrLabel = card.querySelector('input[value="'+answer+'"]')?.closest('.option');
+          if(corrLabel){ corrLabel.classList.add('correct'); corrLabel.querySelector('.badge').textContent = '✓'; }
+          return;
+        }
+        const chosenVal = chosen.value;
+        const chosenLabel = chosen.closest('.option');
+        const correctLabel = card.querySelector('input[value="'+answer+'"]')?.closest('.option');
+        if(chosenVal === answer){
+          correct++;
+          chosenLabel.classList.add('correct');
+          chosenLabel.querySelector('.badge').textContent = '✓';
+        }else{
+          chosenLabel.classList.add('incorrect');
+          chosenLabel.querySelector('.badge').textContent = '✗';
+          if(correctLabel){ correctLabel.classList.add('correct'); correctLabel.querySelector('.badge').textContent = '✓'; }
+        }
+      });
+      return {total, correct, unanswered, wrong: total - correct - unanswered};
+    }
+
+    function gradeAll(){
+      const r1 = gradeSection('#mcq .question-card');
+      const r2 = gradeSection('#tf .question-card');
+      const totalQ = r1.total + r2.total;
+      const correct = r1.correct + r2.correct;
+      const unanswered = r1.unanswered + r2.unanswered;
+      const wrong = totalQ - correct - unanswered;
+      const percent = Math.round((correct/totalQ)*100);
+
+      const results = document.getElementById('results');
+      const scoreLine = document.getElementById('scoreLine');
+      const detailLine = document.getElementById('detailLine');
+      scoreLine.textContent = `الدرجة الكلية: ${correct} / ${totalQ} (${percent}%)`;
+      detailLine.textContent = `اختياري: ${r1.correct}/${r1.total} — صح/خطأ: ${r2.correct}/${r2.total} — أخطاء: ${wrong} — غير مُجاب: ${unanswered}`;
+      results.classList.add('show');
+      document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+    }
+
+    function resetQuiz(){
+      document.querySelectorAll('.question-card').forEach(card => {
+        clearColors(card);
+        card.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      });
+      document.getElementById('results').classList.remove('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+  </script>
+</body>
+</html>
