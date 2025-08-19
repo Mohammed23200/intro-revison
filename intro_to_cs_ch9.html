@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>انترو تو كمبيوتر ساينس — Chapter (Storage) Quiz</title>
+  <!-- AOS animate on scroll -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#0b1b3b;
+      --bg-2:#0f2556;
+      --accent:#1e88e5;
+      --accent-2:#64b5f6;
+      --ink:#eaf4ff;
+      --muted:#b9d7ff;
+      --card:#0f1f45;
+      --border:#1d3b7a;
+      --green:#1db954;
+      --green-bg:#0f3d25;
+      --red:#ff5252;
+      --red-bg:#3a0f15;
+      --yellow:#ffca28;
+      --shadow:0 10px 28px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,var(--bg),var(--bg-2));color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Tahoma,Arial;scroll-behavior:smooth}
+    a{color:var(--accent-2);text-decoration:none}
+    a:hover{opacity:.9}
+    .container{max-width:1100px;margin:0 auto;padding:18px}
+    /* NAVBAR */
+    .nav{
+      position:sticky;top:0;z-index:9999;
+      backdrop-filter: blur(10px);
+      background:rgba(7,15,36,.6);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;padding-inline:12px}
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px
+    }
+    .brand .logo{
+      width:28px;height:28px;border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:inline-block;box-shadow:0 2px 10px rgba(30,136,229,.35)
+    }
+    .nav-links{
+      display:flex;gap:14px;align-items:center;
+    }
+    .nav-links a{padding:8px 10px;border-radius:10px}
+    .nav-links a:hover{background:rgba(255,255,255,.07)}
+    /* Hamburger */
+    .hamburger{
+      display:none;cursor:pointer;border:none;background:transparent;padding:8px;border-radius:10px
+    }
+    .hamburger:focus{outline:2px solid var(--accent)}
+    .hamburger span,.hamburger span:before,.hamburger span:after{
+      display:block;width:22px;height:2px;background:var(--ink);position:relative;transition:.25s
+    }
+    .hamburger span:before,.hamburger span:after{content:"";position:absolute;left:0}
+    .hamburger span:before{top:-6px}
+    .hamburger span:after{top:6px}
+    /* Mobile drawer */
+    .drawer{
+      position:fixed;inset:56px 0 auto 0; /* below navbar */
+      background:rgba(7,15,36,.96);border-top:1px solid rgba(255,255,255,.06);
+      transform:translateY(-110%);transition:transform .25s ease;z-index:9998
+    }
+    .drawer.open{transform:translateY(0)}
+    .drawer .drawer-links{display:flex;flex-direction:column;padding:14px 18px;gap:8px}
+    .drawer .drawer-links a{padding:12px;border-radius:12px;background:rgba(255,255,255,.06)}
+    /* HERO */
+    .hero{padding:36px 18px 10px}
+    .hero .title{
+      font-size:clamp(24px,4vw,40px);font-weight:900;line-height:1.1;margin:6px 0;
+      background:linear-gradient(135deg,#fff,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent
+    }
+    .hero .subtitle{color:var(--muted);max-width:800px}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(100,181,246,.18);color:#daf0ff;border:1px solid rgba(100,181,246,.35);
+      padding:8px 12px;border-radius:999px;font-size:13px
+    }
+    .btn{
+      appearance:none;border:none;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;color:#08142c;
+      background:linear-gradient(135deg,#7cc2ff,#1e88e5);box-shadow:0 10px 24px rgba(30,136,229,.35)
+    }
+    .btn:hover{filter:brightness(1.02)}
+    .btn.secondary{background:rgba(255,255,255,.12);color:var(--ink);border:1px solid rgba(255,255,255,.18);box-shadow:none}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    /* SECTIONS */
+    section{padding:10px 0 30px}
+    .card{
+      background:linear-gradient(180deg,var(--card),#0b1b3b);
+      border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px
+    }
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .q-num{font-weight:800;color:var(--muted);margin-inline-end:8px}
+    .q-text{font-weight:700;margin-bottom:12px}
+    .option{
+      display:flex;align-items:flex-start;gap:10px;padding:10px 12px;margin:8px 0;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.03);
+      transition:.2s
+    }
+    .option:hover{background:rgba(255,255,255,.06)}
+    .option input{transform:translateY(3px);accent-color:var(--accent)}
+    /* Result colors */
+    .option.correct{border-color:rgba(29,185,84,.85);background:var(--green-bg)}
+    .option.incorrect{border-color:rgba(255,82,82,.9);background:var(--red-bg)}
+    .option.correct .badge{color:var(--green)}
+    .option.incorrect .badge{color:var(--red)}
+    .badge{font-weight:900;margin-inline-start:auto}
+    .question-card.unanswered{outline:2px dashed var(--yellow);outline-offset:3px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 12px}
+    .muted{color:var(--muted);font-size:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .results{
+      display:none;margin-top:14px;padding:14px;border-radius:14px;
+      background:linear-gradient(180deg,#0f2d62,#0b1b3b);border:1px solid var(--border)
+    }
+    .results.show{display:block}
+    .score{font-weight:900;font-size:18px}
+    .footer{
+      text-align:center;color:var(--muted);padding:30px 12px 60px
+    }
+    .made{margin-top:6px;color:#9fe0ff}
+    /* Responsive */
+    @media (min-width: 720px){
+      .grid{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 860px){
+      .nav-links{display:none}
+      .hamburger{display:block}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand"><span class="logo" aria-hidden="true"></span>انترو تو كمبيوتر ساينس</div>
+      <div class="nav-links" aria-label="روابط">
+        <a href="#mcq">اختياري</a>
+        <a href="#tf">صح/خطأ</a>
+        <a href="#resultBox">النتيجة</a>
+      </div>
+      <button class="hamburger" aria-label="فتح وإغلاق القائمة" aria-expanded="false"><span></span></button>
+    </div>
+    <div class="drawer" id="drawer" aria-hidden="true">
+      <div class="drawer-links">
+        <a href="#mcq" onclick="toggleDrawer(false)">اختياري</a>
+        <a href="#tf" onclick="toggleDrawer(false)">صح/خطأ</a>
+        <a href="#resultBox" onclick="toggleDrawer(false)">النتيجة</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container">
+    <div class="chip" data-aos="fade-down">Chapter — Storage</div>
+    <h1 class="title" data-aos="fade-up">اختبار التخزين (40 اختيار من متعدد + جميع الصح/الخطأ المعطاة)</h1>
+    <p class="subtitle" data-aos="fade-up" data-aos-delay="80">
+      جاوب وبعدين اضغط <strong>عرض النتيجة</strong>. الصح باللون الأخضر والخطأ باللون الأحمر.
+      شغال بسلاسة على الكمبيوتر والموبايل + زر همبورجر لإظهار/إخفاء الناف بار.
+    </p>
+    <div class="actions" data-aos="fade-up" data-aos-delay="120">
+      <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+      <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="mcq" aria-labelledby="mcq-title">
+      <div class="section-title">
+        <h2 id="mcq-title">الأسئلة الاختيارية (40 سؤال)</h2>
+        <span class="muted">اختر إجابة واحدة لكل سؤال</span>
+      </div>
+      <div class="grid">
+        <!-- 40 MCQ -->
+        <!-- 1 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc1" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">1)</span>______ storage is the physical material on which a computer keeps data, instructions, and information.</div>
+          <label class="option"><input type="radio" name="mc1" value="a"> a. Primary <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="b"> b. Secondary <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="c"> c. Tertiary <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="d"> d. All of the above <span class="badge"></span></label>
+        </div>
+
+        <!-- 2 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc2" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">2)</span>Which of the following is not a secondary storage medium?</div>
+          <label class="option"><input type="radio" name="mc2" value="a"> a. hard disks <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="b"> b. RAM <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="c"> c. memory cards <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="d"> d. USB memory drives <span class="badge"></span></label>
+        </div>
+
+        <!-- 3 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc3" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">3)</span>A(n) ______ device is the computer hardware that records and/or retrieves items to and from storage media.</div>
+          <label class="option"><input type="radio" name="mc3" value="a"> a. concatenation <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="b"> b. indexed <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="c"> c. resolved <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="d"> d. storage <span class="badge"></span></label>
+        </div>
+
+        <!-- 4 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc4" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">4)</span>______ disks use magnetic particles to store data, instructions, and information on a disk’s surface.</div>
+          <label class="option"><input type="radio" name="mc4" value="a"> a. Hard <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="b"> b. Flash <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="c"> c. Optical <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="d"> d. Indexed <span class="badge"></span></label>
+        </div>
+
+        <!-- 5 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc5" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">5)</span>Which is a magnetic storage medium?</div>
+          <label class="option"><input type="radio" name="mc5" value="a"> a. DVD <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="b"> b. hard disk <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="c"> c. ExpressCard <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="d"> d. flash memory card <span class="badge"></span></label>
+        </div>
+
+        <!-- 6 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc6" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">6)</span>A(n) ______ disk is a storage device that contains one or more inflexible, circular platters that store data, instructions, and information.</div>
+          <label class="option"><input type="radio" name="mc6" value="a"> a. soft <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="b"> b. platter <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="c"> c. hard <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="d"> d. aluminum <span class="badge"></span></label>
+        </div>
+
+        <!-- 7 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc7" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">7)</span>Experts estimate that hard disks using perpendicular recording will provide storage capacities about ______ than disks using longitudinal recording.</div>
+          <label class="option"><input type="radio" name="mc7" value="a"> a. 10 times greater <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="b"> b. 10 times less <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="c"> c. 100 times greater <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="d"> d. 100 times less <span class="badge"></span></label>
+        </div>
+
+        <!-- 8 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc8" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">8)</span>Which of the following is not a characteristic of a hard disk?</div>
+          <label class="option"><input type="radio" name="mc8" value="a"> a. platter <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="b"> b. cylinder <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="c"> c. track <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="d"> d. chip <span class="badge"></span></label>
+        </div>
+
+        <!-- 9 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc9" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">9)</span>Hard disks spin at 5,400 to ___ rpm.</div>
+          <label class="option"><input type="radio" name="mc9" value="a"> a. 6,000 <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="b"> b. 10,000 <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="c"> c. 15,000 <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="d"> d. 20,000 <span class="badge"></span></label>
+        </div>
+
+        <!-- 10 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc10" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">10)</span>A ______ occurs when the read/write head of a hard disk touches the surface of a platter.</div>
+          <label class="option"><input type="radio" name="mc10" value="a"> a. backup <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="b"> b. head crash <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="c"> c. reading <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="d"> d. writing <span class="badge"></span></label>
+        </div>
+
+        <!-- 11 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc11" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">11)</span>A ______ is a duplicate of a file, program, or disk that can be used in case the original is lost, damaged, or destroyed.</div>
+          <label class="option"><input type="radio" name="mc11" value="a"> a. cache <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="b"> b. backup <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="c"> c. home site <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="d"> d. baseline <span class="badge"></span></label>
+        </div>
+
+        <!-- 12 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc12" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">12)</span>A group of two or more integrated hard disks is called a ______.</div>
+          <label class="option"><input type="radio" name="mc12" value="a"> a. pocket <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="b"> b. UFC <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="c"> c. RAID <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="d"> d. baseline <span class="badge"></span></label>
+        </div>
+
+        <!-- 13 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc13" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">13)</span>A ______ hard drive enables mobile users easily to transport photos and other files from one computer to another.</div>
+          <label class="option"><input type="radio" name="mc13" value="a"> a. personal <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="b"> b. mini <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="c"> c. USB <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="d"> d. pocket <span class="badge"></span></label>
+        </div>
+
+        <!-- 14 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc14" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">14)</span>A disk ______ consists of a special-purpose chip and electronic circuits that control the transfer of data, instructions, and information from a disk to and from the system bus and other components in a computer.</div>
+          <label class="option"><input type="radio" name="mc14" value="a"> a. controller <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="b"> b. router <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="c"> c. indexer <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="d"> d. tablet <span class="badge"></span></label>
+        </div>
+
+        <!-- 15 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc15" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">15)</span>Which is not a type of disk controller?</div>
+          <label class="option"><input type="radio" name="mc15" value="a"> a. SATA <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="b"> b. EIDE <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="c"> c. SCSI <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="d"> d. UMD <span class="badge"></span></label>
+        </div>
+
+        <!-- 16 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc16" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">16)</span>Which of the following is not an advantage of SAS over parallel SCSI?</div>
+          <label class="option"><input type="radio" name="mc16" value="a"> a. reduced interference <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="b"> b. thicker, shorter cables <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="c"> c. less expensive <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="d"> d. support for many more connected devices at once <span class="badge"></span></label>
+        </div>
+
+        <!-- 17 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc17" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">17)</span>All of the following are flash memory devices EXCEPT ______.</div>
+          <label class="option"><input type="radio" name="mc17" value="a"> a. CompactFlash <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="b"> b. Secure Digital <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="c"> c. Memory Stick <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="d"> d. BD-RE <span class="badge"></span></label>
+        </div>
+
+        <!-- 18 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc18" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">18)</span>With a storage capacity of 512 MB to 100 GB, a(n) ___ card is used in digital cameras, smart phones, PDAs, photo printers, portable media players, and notebook and desktop computers.</div>
+          <label class="option"><input type="radio" name="mc18" value="a"> a. Secure Digital <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="b"> b. CompactFlash <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="c"> c. xD Picture Card <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="d"> d. Express Card <span class="badge"></span></label>
+        </div>
+
+        <!-- 19 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc19" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">19)</span>With a storage capacity of 512 MB to 8 GB, a(n) ___ card is used in digital cameras, digital video cameras, smart phones, PDAs, photo printers, and portable media players.</div>
+          <label class="option"><input type="radio" name="mc19" value="a"> a. Secure Digital <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="b"> b. Express Card <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="c"> c. Compact Flash <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="d"> d. xD Picture Card <span class="badge"></span></label>
+        </div>
+
+        <!-- 20 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc20" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">20)</span>With a storage capacity of 256 MB to 2 GB, a(n) ___ is used in digital cameras and photo printers.</div>
+          <label class="option"><input type="radio" name="mc20" value="a"> a. Secure Digital <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="b"> b. xD Picture Card <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="c"> c. Compact Flash <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="d"> d. Express Card <span class="badge"></span></label>
+        </div>
+
+        <!-- 21 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc21" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">21)</span>With a storage capacity of 1 to 16 GB, a(n) ___ is used in digital cameras, smart phones, and handheld game consoles.</div>
+          <label class="option"><input type="radio" name="mc21" value="a"> a. Compact Flash <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="b"> b. Secure Digital <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="c"> c. xD Picture Card <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="d"> d. Memory Stick <span class="badge"></span></label>
+        </div>
+
+        <!-- 22 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc22" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">22)</span>A card ___ is a device that reads and writes data, instructions, and information stored on memory cards.</div>
+          <label class="option"><input type="radio" name="mc22" value="a"> a. access stick <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="b"> b. reader/writer <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="c"> c. access port <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="d"> d. restorer <span class="badge"></span></label>
+        </div>
+
+        <!-- 23 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc23" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">23)</span>Current USB flash drives have storage capacities ranging from ___.</div>
+          <label class="option"><input type="radio" name="mc23" value="a"> a. 128 MB to 24 GB <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="b"> b. 256 MB to 32 GB <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="c"> c. 256 MB to 48 GB <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="d"> d. 512 MB to 64 GB <span class="badge"></span></label>
+        </div>
+
+        <!-- 24 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc24" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">24)</span>___ storage is an Internet service that provides hard disk storage to computer users.</div>
+          <label class="option"><input type="radio" name="mc24" value="a"> a. Micro <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="b"> b. Cloud <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="c"> c. Flash <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="d"> d. USB <span class="badge"></span></label>
+        </div>
+
+        <!-- 25 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc25" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">25)</span>Some users choose ___ storage instead of storing data locally on a hard disk or other media.</div>
+          <label class="option"><input type="radio" name="mc25" value="a"> a. dynamic <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="b"> b. router <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="c"> c. static <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="d"> d. cloud <span class="badge"></span></label>
+        </div>
+
+        <!-- 26 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc26" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">26)</span>A(n) ___ disc is a type of optical storage media that consists of a flat, round, portable disc made of metal, plastic, and lacquer.</div>
+          <label class="option"><input type="radio" name="mc26" value="a"> a. magnetic <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="b"> b. backup <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="c"> c. optical <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="d"> d. tablet <span class="badge"></span></label>
+        </div>
+
+        <!-- 27 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc27" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">27)</span>A ___ disc can be read, written to, and erased.</div>
+          <label class="option"><input type="radio" name="mc27" value="a"> a. CD-ROM <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="b"> b. CD-R <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="c"> c. DVD-ROM <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="d"> d. DVD+RW <span class="badge"></span></label>
+        </div>
+
+        <!-- 28 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc28" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">28)</span>A typical CD-ROM holds up to ___ of data.</div>
+          <label class="option"><input type="radio" name="mc28" value="a"> a. 1 MB <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="b"> b. 1 GB <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="c"> c. 1 TB <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="d"> d. 1 PB <span class="badge"></span></label>
+        </div>
+
+        <!-- 29 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc29" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">29)</span>A Kodak ___ CD stores digital versions of film using a jpg file format.</div>
+          <label class="option"><input type="radio" name="mc29" value="a"> a. Optical <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="b"> b. Picture <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="c"> c. Graphics <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="d"> d. Image <span class="badge"></span></label>
+        </div>
+
+        <!-- 30 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc30" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">30)</span>A newer, quite expensive DVD format is ___, which has storage capacities of 100 GB, with expectations of exceeding 200 GB in the future.</div>
+          <label class="option"><input type="radio" name="mc30" value="a"> a. Blu-ray <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="b"> b. DVD-R <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="c"> c. DVD-RW <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="d"> d. DVD-ROM <span class="badge"></span></label>
+        </div>
+
+        <!-- 31 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc31" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">31)</span>A ___ is a high-capacity optical disc that users can read but not write on or erase.</div>
+          <label class="option"><input type="radio" name="mc31" value="a"> a. DVD-R <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="b"> b. DVD-RW <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="c"> c. DVD-ROM <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="d"> d. Blu-ray <span class="badge"></span></label>
+        </div>
+
+        <!-- 32 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc32" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">32)</span>___ is a DVD format that potentially will contain up to 20 layers, each with a capacity of 5 GB.</div>
+          <label class="option"><input type="radio" name="mc32" value="a"> a. DVD-RW <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="b"> b. DVD-ROM <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="c"> c. CD-ROM <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="d"> d. HD VMD <span class="badge"></span></label>
+        </div>
+
+        <!-- 33 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc33" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">33)</span>As pictured, ____ is a magnetically coated ribbon of plastic capable of storing large amounts of data and information at a low cost.</div>
+          <label class="option"><input type="radio" name="mc33" value="a"> a. tape <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="b"> b. Opticon <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="c"> c. indexed data <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="d"> d. threaded memory <span class="badge"></span></label>
+        </div>
+
+        <!-- 34 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc34" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">34)</span>A tape ____ reads and writes data and information on a tape.</div>
+          <label class="option"><input type="radio" name="mc34" value="a"> a. reader <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="b"> b. drive <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="c"> c. port <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="d"> d. adapter <span class="badge"></span></label>
+        </div>
+
+        <!-- 35 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc35" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">35)</span>A(n) ____ stores data on a thin microprocessor embedded in the card.</div>
+          <label class="option"><input type="radio" name="mc35" value="a"> a. ThumbCard <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="b"> b. AccessCard <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="c"> c. ExpressCard <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="d"> d. smart card <span class="badge"></span></label>
+        </div>
+
+        <!-- 36 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc36" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">36)</span>____ is a 100- to 215-foot roll of film used to store microscopic images of documents.</div>
+          <label class="option"><input type="radio" name="mc36" value="a"> a. Microfilm <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="b"> b. Microtape <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="c"> c. Microfiche <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="d"> d. Microsheet <span class="badge"></span></label>
+        </div>
+
+        <!-- 37 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc37" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">37)</span>____ is a small sheet of film, usually about 4 x 6 inches, used to store microscopic images of documents.</div>
+          <label class="option"><input type="radio" name="mc37" value="a"> a. Microfilm <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="b"> b. Microtape <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="c"> c. Microfiche <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="d"> d. Microsheet <span class="badge"></span></label>
+        </div>
+
+        <!-- 38 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc38" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">38)</span>Which has the longest life expectancy?</div>
+          <label class="option"><input type="radio" name="mc38" value="a"> a. microfilm <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="b"> b. hard disks <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="c"> c. CDs <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="d"> d. DVDs <span class="badge"></span></label>
+        </div>
+
+        <!-- 39 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc39" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">39)</span>A large business, commonly referred to as a(n)____, has hundreds or thousands of employees.</div>
+          <label class="option"><input type="radio" name="mc39" value="a"> a. commonwealth <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="b"> b. megacorp <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="c"> c. enterprise <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="d"> d. legacy <span class="badge"></span></label>
+        </div>
+
+        <!-- 40 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc40" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">40)</span>In an enterprise, some storage systems can provide more than ____ of storage capacity.</div>
+          <label class="option"><input type="radio" name="mc40" value="a"> a. 185 MB <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="b"> b. 185 GB <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="c"> c. 185 PB <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="d"> d. 185 TB <span class="badge"></span></label>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="tf" aria-labelledby="tf-title">
+      <div class="section-title">
+        <h2 id="tf-title">أسئلة الصح والخطأ (كل ما أرسلته)</h2>
+        <span class="muted">اختر (T) صح أو (F) خطأ</span>
+      </div>
+      <div class="grid">
+        <!-- T/F as provided (35 items) -->
+        <!-- 1 -->
+        <div class="card question-card" data-type="tf" data-qid="tf1" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">1)</span>A storage medium is also called secondary storage.</div>
+          <label class="option"><input type="radio" name="tf1" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf1" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 2 -->
+        <div class="card question-card" data-type="tf" data-qid="tf2" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">2)</span>The access time of memory is slow compared to the access time of storage devices.</div>
+          <label class="option"><input type="radio" name="tf2" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf2" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 3 -->
+        <div class="card question-card" data-type="tf" data-qid="tf3" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">3)</span>When storage devices write on storage media, they are creating input.</div>
+          <label class="option"><input type="radio" name="tf3" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf3" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 4 -->
+        <div class="card question-card" data-type="tf" data-qid="tf4" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">4)</span>You can read from and write on a hard disk any number of times.</div>
+          <label class="option"><input type="radio" name="tf4" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf4" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 5 -->
+        <div class="card question-card" data-type="tf" data-qid="tf5" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">5)</span>A perimeter is a narrow recording band that forms a full circle on the surface of the disk.</div>
+          <label class="option"><input type="radio" name="tf5" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf5" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 6 -->
+        <div class="card question-card" data-type="tf" data-qid="tf6" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">6)</span>Tracks are broken into small arcs called sectors.</div>
+          <label class="option"><input type="radio" name="tf6" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf6" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 7 -->
+        <div class="card question-card" data-type="tf" data-qid="tf7" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">7)</span>The actual capacity of a hard disk sometimes differs from the advertised capacity due to bad sectors.</div>
+          <label class="option"><input type="radio" name="tf7" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf7" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 8 -->
+        <div class="card question-card" data-type="tf" data-qid="tf8" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">8)</span>The location of a hard disk’s read/write heads is often referred to by its cylinder.</div>
+          <label class="option"><input type="radio" name="tf8" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf8" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 9 -->
+        <div class="card question-card" data-type="tf" data-qid="tf9" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">9)</span>The distance between a hard disk’s read/write head and the platter is about 1/10 of an inch.</div>
+          <label class="option"><input type="radio" name="tf9" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf9" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 10 -->
+        <div class="card question-card" data-type="tf" data-qid="tf10" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">10)</span>While a computer is running, the platters in the hard disk rotate at a high speed.</div>
+          <label class="option"><input type="radio" name="tf10" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf10" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 11 -->
+        <div class="card question-card" data-type="tf" data-qid="tf11" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">11)</span>Removable hard disks have storage capacities up to 750 GB.</div>
+          <label class="option"><input type="radio" name="tf11" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf11" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 12 -->
+        <div class="card question-card" data-type="tf" data-qid="tf12" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">12)</span>A Memory Stick Micro (M2) has a storage capacity of up to 4 GB.</div>
+          <label class="option"><input type="radio" name="tf12" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf12" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 13 -->
+        <div class="card question-card" data-type="tf" data-qid="tf13" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">13)</span>Current USB flash drives have storage capacities up to 4 GB.</div>
+          <label class="option"><input type="radio" name="tf13" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf13" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 14 -->
+        <div class="card question-card" data-type="tf" data-qid="tf14" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">14)</span>ExpressCard modules can be used to add memory, storage, communications, multimedia, and security capabilities to a computer.</div>
+          <label class="option"><input type="radio" name="tf14" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf14" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 15 -->
+        <div class="card question-card" data-type="tf" data-qid="tf15" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">15)</span>Users subscribe to cloud storage to access files from any device with internet access.</div>
+          <label class="option"><input type="radio" name="tf15" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf15" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 16 -->
+        <div class="card question-card" data-type="tf" data-qid="tf16" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">16)</span>Amazon EC2 and Amazon S3 are examples of enterprise-level cloud storage providers.</div>
+          <label class="option"><input type="radio" name="tf16" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf16" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 17 -->
+        <div class="card question-card" data-type="tf" data-qid="tf17" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">17)</span>Cloud storage providers offer varying types of services.</div>
+          <label class="option"><input type="radio" name="tf17" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf17" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 18 -->
+        <div class="card question-card" data-type="tf" data-qid="tf18" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">18)</span>A doctor can use cloud storage to view x-ray images from another hospital, home, or office.</div>
+          <label class="option"><input type="radio" name="tf18" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf18" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 19 -->
+        <div class="card question-card" data-type="tf" data-qid="tf19" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">19)</span>Optical discs store data using microscopic lands (indentations) and pits (flat areas).</div>
+          <label class="option"><input type="radio" name="tf19" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf19" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 20 -->
+        <div class="card question-card" data-type="tf" data-qid="tf20" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">20)</span>You cannot erase a DVD-ROM.</div>
+          <label class="option"><input type="radio" name="tf20" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf20" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 21 -->
+        <div class="card question-card" data-type="tf" data-qid="tf21" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">21)</span>You can erase a CD-RW.</div>
+          <label class="option"><input type="radio" name="tf21" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf21" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 22 -->
+        <div class="card question-card" data-type="tf" data-qid="tf22" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">22)</span>A mini-DVD that has grown in popularity is the Blu-ray disc.</div>
+          <label class="option"><input type="radio" name="tf22" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf22" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 23 -->
+        <div class="card question-card" data-type="tf" data-qid="tf23" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">23)</span>Tape is no longer used as a primary storage method.</div>
+          <label class="option"><input type="radio" name="tf23" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf23" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 24 -->
+        <div class="card question-card" data-type="tf" data-qid="tf24" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">24)</span>Smart cards cannot be updated.</div>
+          <label class="option"><input type="radio" name="tf24" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf24" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 25 -->
+        <div class="card question-card" data-type="tf" data-qid="tf25" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">25)</span>Microfilm reduces the amount of paper firms must handle.</div>
+          <label class="option"><input type="radio" name="tf25" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf25" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 26 -->
+        <div class="card question-card" data-type="tf" data-qid="tf26" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">26)</span>A hard disk that is mounted inside the system unit is sometimes called a mother disk.</div>
+          <label class="option"><input type="radio" name="tf26" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf26" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 27 -->
+        <div class="card question-card" data-type="tf" data-qid="tf27" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">27)</span>A CD-ROM is read-only.</div>
+          <label class="option"><input type="radio" name="tf27" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf27" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 28 -->
+        <div class="card question-card" data-type="tf" data-qid="tf28" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">28)</span>A CD-R’s contents can be erased.</div>
+          <label class="option"><input type="radio" name="tf28" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf28" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 29 -->
+        <div class="card question-card" data-type="tf" data-qid="tf29" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">29)</span>The process of copying audio/video data from a purchased disc and saving it on digital media is called burning.</div>
+          <label class="option"><input type="radio" name="tf29" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf29" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 30 -->
+        <div class="card question-card" data-type="tf" data-qid="tf30" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">30)</span>With longitudinal recording, hard disks align magnetic particles vertically around the disk’s surface.</div>
+          <label class="option"><input type="radio" name="tf30" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf30" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 31 -->
+        <div class="card question-card" data-type="tf" data-qid="tf31" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">31)</span>Perpendicular recording allows for greater storage capacities than longitudinal recording.</div>
+          <label class="option"><input type="radio" name="tf31" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf31" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 32 -->
+        <div class="card question-card" data-type="tf" data-qid="tf32" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">32)</span>External hard disks connect via USB or FireWire ports.</div>
+          <label class="option"><input type="radio" name="tf32" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf32" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 33 -->
+        <div class="card question-card" data-type="tf" data-qid="tf33" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">33)</span>Removable hard disks are commonly used in servers.</div>
+          <label class="option"><input type="radio" name="tf33" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf33" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 34 -->
+        <div class="card question-card" data-type="tf" data-qid="tf34" data-answer="T" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">34)</span>LightScribe technology etches labels directly onto optical discs.</div>
+          <label class="option"><input type="radio" name="tf34" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf34" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+        <!-- 35 -->
+        <div class="card question-card" data-type="tf" data-qid="tf35" data-answer="F" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">35)</span>Microfiche is a roll of film, while microfilm is a small sheet.</div>
+          <label class="option"><input type="radio" name="tf35" value="T"> صح (T) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="tf35" value="F"> خطأ (F) <span class="badge"></span></label>
+        </div>
+
+      </div>
+
+      <div class="actions" style="margin-top:18px">
+        <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+        <button class="btn secondary" onclick="resetQuiz()">مسح الاختيارات</button>
+      </div>
+    </section>
+
+    <section id="resultBox" aria-labelledby="res-title">
+      <div class="card" data-aos="fade-up">
+        <div class="section-title">
+          <h2 id="res-title">نتيجتك</h2>
+          <span class="muted">تفاصيل الدرجات بعد التصحيح</span>
+        </div>
+        <div class="results" id="results">
+          <div class="score" id="scoreLine">—</div>
+          <div class="muted" id="detailLine" style="margin-top:6px">—</div>
+          <div class="muted" id="tipLine" style="margin-top:6px">الأسئلة غير المُجابة تظهر بإطار أصفر.</div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn" onclick="scrollToTop()">العودة للأعلى</button>
+            <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div>© Chapter — Storage Quiz</div>
+    <div class="made">صُنعت بالحب بواسطة جيمي 💙</div>
+  </footer>
+
+  <!-- AOS + App JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 500, easing: 'ease-out' });
+
+    const drawer = document.getElementById('drawer');
+    const burger = document.querySelector('.hamburger');
+    function toggleDrawer(forceState){
+      const willOpen = (typeof forceState==='boolean') ? forceState : !drawer.classList.contains('open');
+      drawer.classList.toggle('open', willOpen);
+      burger.setAttribute('aria-expanded', String(willOpen));
+      drawer.setAttribute('aria-hidden', String(!willOpen));
+    }
+    burger.addEventListener('click', () => toggleDrawer());
+
+    function clearColors(card){
+      card.classList.remove('unanswered');
+      card.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('correct','incorrect');
+        const badge = opt.querySelector('.badge'); if (badge) badge.textContent = '';
+      });
+    }
+
+    function gradeSection(selector){
+      const cards = Array.from(document.querySelectorAll(selector));
+      let total = cards.length, correct = 0, unanswered = 0;
+      cards.forEach(card => {
+        clearColors(card);
+        const type = card.dataset.type;
+        const qid = card.dataset.qid;
+        const answer = card.dataset.answer; // 'a'/'b'/... or 'T'/'F'
+        const chosen = card.querySelector('input[type="radio"]:checked');
+        if(!chosen){
+          unanswered++;
+          card.classList.add('unanswered');
+          // Reveal the correct option in green for learning
+          const corrLabel = card.querySelector('input[value="'+answer+'"]')?.closest('.option');
+          if(corrLabel){ corrLabel.classList.add('correct'); corrLabel.querySelector('.badge').textContent = '✓'; }
+          return;
+        }
+        const chosenVal = chosen.value;
+        const chosenLabel = chosen.closest('.option');
+        const correctLabel = card.querySelector('input[value="'+answer+'"]')?.closest('.option');
+        if(chosenVal === answer){
+          correct++;
+          chosenLabel.classList.add('correct');
+          chosenLabel.querySelector('.badge').textContent = '✓';
+        }else{
+          chosenLabel.classList.add('incorrect');
+          chosenLabel.querySelector('.badge').textContent = '✗';
+          if(correctLabel){ correctLabel.classList.add('correct'); correctLabel.querySelector('.badge').textContent = '✓'; }
+        }
+      });
+      return {total, correct, unanswered, wrong: total - correct - unanswered};
+    }
+
+    function gradeAll(){
+      const r1 = gradeSection('#mcq .question-card');
+      const r2 = gradeSection('#tf .question-card');
+      const totalQ = r1.total + r2.total;
+      const correct = r1.correct + r2.correct;
+      const unanswered = r1.unanswered + r2.unanswered;
+      const wrong = totalQ - correct - unanswered;
+      const percent = Math.round((correct/totalQ)*100);
+
+      const results = document.getElementById('results');
+      const scoreLine = document.getElementById('scoreLine');
+      const detailLine = document.getElementById('detailLine');
+      scoreLine.textContent = `الدرجة الكلية: ${correct} / ${totalQ} (${percent}%)`;
+      detailLine.textContent = `اختياري: ${r1.correct}/${r1.total} — صح/خطأ: ${r2.correct}/${r2.total} — أخطاء: ${wrong} — غير مُجاب: ${unanswered}`;
+      results.classList.add('show');
+      document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+    }
+
+    function resetQuiz(){
+      document.querySelectorAll('.question-card').forEach(card => {
+        clearColors(card);
+        card.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      });
+      document.getElementById('results').classList.remove('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+  </script>
+</body>
+</html>
