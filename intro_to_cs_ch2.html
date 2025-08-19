@@ -1,0 +1,634 @@
+تمام — دي صفحة **Chapter 2** كاملة بنفس الثيم الأزرق، همبورجر للموبايل، AOS أنميشن، وتصحيح دقيق (الصح أخضر، الغلط أحمر، والغير مُجاب عليه إطار أصفر + إظهار الإجابة الصحيحة).
+انسخه واحفظه كملف: **`intro_to_cs_ch2.html`** وشغّله على طول.
+
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>انترو تو كمبيوتر ساينس — Chapter 2 Quiz</title>
+  <!-- AOS animate on scroll -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#0b1b3b;
+      --bg-2:#0f2556;
+      --accent:#1e88e5;
+      --accent-2:#64b5f6;
+      --ink:#eaf4ff;
+      --muted:#b9d7ff;
+      --card:#0f1f45;
+      --border:#1d3b7a;
+      --green:#1db954;
+      --green-bg:#0f3d25;
+      --red:#ff5252;
+      --red-bg:#3a0f15;
+      --yellow:#ffca28;
+      --shadow:0 10px 28px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,var(--bg),var(--bg-2));color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Tahoma,Arial;scroll-behavior:smooth}
+    a{color:var(--accent-2);text-decoration:none}
+    a:hover{opacity:.9}
+    .container{max-width:1100px;margin:0 auto;padding:18px}
+    /* NAVBAR */
+    .nav{
+      position:sticky;top:0;z-index:9999;
+      backdrop-filter: blur(10px);
+      background:rgba(7,15,36,.6);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;padding-inline:12px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+    .brand .logo{
+      width:28px;height:28px;border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:inline-block;box-shadow:0 2px 10px rgba(30,136,229,.35)
+    }
+    .nav-links{display:flex;gap:14px;align-items:center;}
+    .nav-links a{padding:8px 10px;border-radius:10px}
+    .nav-links a:hover{background:rgba(255,255,255,.07)}
+    /* Hamburger */
+    .hamburger{display:none;cursor:pointer;border:none;background:transparent;padding:8px;border-radius:10px}
+    .hamburger:focus{outline:2px solid var(--accent)}
+    .hamburger span,.hamburger span:before,.hamburger span:after{
+      display:block;width:22px;height:2px;background:var(--ink);position:relative;transition:.25s
+    }
+    .hamburger span:before,.hamburger span:after{content:"";position:absolute;left:0}
+    .hamburger span:before{top:-6px}
+    .hamburger span:after{top:6px}
+    /* Mobile drawer */
+    .drawer{
+      position:fixed;inset:56px 0 auto 0;
+      background:rgba(7,15,36,.96);border-top:1px solid rgba(255,255,255,.06);
+      transform:translateY(-110%);transition:transform .25s ease;z-index:9998
+    }
+    .drawer.open{transform:translateY(0)}
+    .drawer .drawer-links{display:flex;flex-direction:column;padding:14px 18px;gap:8px}
+    .drawer .drawer-links a{padding:12px;border-radius:12px;background:rgba(255,255,255,.06)}
+    /* HERO */
+    .hero{padding:36px 18px 10px}
+    .hero .title{
+      font-size:clamp(24px,4vw,40px);font-weight:900;line-height:1.1;margin:6px 0;
+      background:linear-gradient(135deg,#fff,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent
+    }
+    .hero .subtitle{color:var(--muted);max-width:800px}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(100,181,246,.18);color:#daf0ff;border:1px solid rgba(100,181,246,.35);
+      padding:8px 12px;border-radius:999px;font-size:13px
+    }
+    .btn{
+      appearance:none;border:none;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;color:#08142c;
+      background:linear-gradient(135deg,#7cc2ff,#1e88e5);box-shadow:0 10px 24px rgba(30,136,229,.35)
+    }
+    .btn:hover{filter:brightness(1.02)}
+    .btn.secondary{background:rgba(255,255,255,.12);color:var(--ink);border:1px solid rgba(255,255,255,.18);box-shadow:none}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    /* SECTIONS */
+    section{padding:10px 0 30px}
+    .card{
+      background:linear-gradient(180deg,var(--card),#0b1b3b);
+      border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px
+    }
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .q-num{font-weight:800;color:var(--muted);margin-inline-end:8px}
+    .q-text{font-weight:700;margin-bottom:12px}
+    .option{
+      display:flex;align-items:flex-start;gap:10px;padding:10px 12px;margin:8px 0;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.03);
+      transition:.2s
+    }
+    .option:hover{background:rgba(255,255,255,.06)}
+    .option input{transform:translateY(3px);accent-color:var(--accent)}
+    /* Result colors */
+    .option.correct{border-color:rgba(29,185,84,.85);background:var(--green-bg)}
+    .option.incorrect{border-color:rgba(255,82,82,.9);background:var(--red-bg)}
+    .option.correct .badge{color:var(--green)}
+    .option.incorrect .badge{color:var(--red)}
+    .badge{font-weight:900;margin-inline-start:auto}
+    .question-card.unanswered{outline:2px dashed var(--yellow);outline-offset:3px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 12px}
+    .muted{color:var(--muted);font-size:14px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .results{
+      display:none;margin-top:14px;padding:14px;border-radius:14px;
+      background:linear-gradient(180deg,#0f2d62,#0b1b3b);border:1px solid var(--border)
+    }
+    .results.show{display:block}
+    .score{font-weight:900;font-size:18px}
+    .footer{text-align:center;color:var(--muted);padding:30px 12px 60px}
+    .made{margin-top:6px;color:#9fe0ff}
+    /* Responsive */
+    @media (min-width: 720px){ .grid{grid-template-columns:1fr 1fr} }
+    @media (max-width: 860px){ .nav-links{display:none} .hamburger{display:block} }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand"><span class="logo" aria-hidden="true"></span>انترو تو كمبيوتر ساينس</div>
+      <div class="nav-links" aria-label="روابط">
+        <a href="#mcq">اختياري</a>
+        <a href="#tf">صح/خطأ</a>
+        <a href="#resultBox">النتيجة</a>
+      </div>
+      <button class="hamburger" aria-label="فتح وإغلاق القائمة" aria-expanded="false"><span></span></button>
+    </div>
+    <div class="drawer" id="drawer" aria-hidden="true">
+      <div class="drawer-links">
+        <a href="#mcq" onclick="toggleDrawer(false)">اختياري</a>
+        <a href="#tf" onclick="toggleDrawer(false)">صح/خطأ</a>
+        <a href="#resultBox" onclick="toggleDrawer(false)">النتيجة</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container">
+    <div class="chip" data-aos="fade-down">Chapter 2 — Internet & the Web</div>
+    <h1 class="title" data-aos="fade-up">اختبار الفصل الثاني (40 اختيار من متعدد + 25 صح/خطأ)</h1>
+    <p class="subtitle" data-aos="fade-up" data-aos-delay="80">
+      جاوب وبعدين اضغط <strong>عرض النتيجة</strong>. الصح باللون الأخضر والخطأ باللون الأحمر.
+      شغال على الكمبيوتر والموبايل + زر همبورجر لإظهار/إخفاء الناف بار.
+    </p>
+    <div class="actions" data-aos="fade-up" data-aos-delay="120">
+      <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+      <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="mcq" aria-labelledby="mcq-title">
+      <div class="section-title">
+        <h2 id="mcq-title">الأسئلة الاختيارية (40 سؤال)</h2>
+        <span class="muted">اختر إجابة واحدة لكل سؤال</span>
+      </div>
+      <div class="grid">
+        <!-- ============ 40 MCQ ============ -->
+        <!-- 1 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc1" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">1)</span>The ______ is a worldwide collection of networks that links millions of businesses, government agencies, educational institutions, and individuals.</div>
+          <label class="option"><input type="radio" name="mc1" value="a"> a. Internet <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="b"> b. microblog <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="c"> c. Web <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc1" value="d"> d. NSFNet <span class="badge"></span></label>
+        </div>
+        <!-- 2 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc2" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">2)</span>A(n) ____ address is a number that uniquely identifies each computer or device connected to the Internet.</div>
+          <label class="option"><input type="radio" name="mc2" value="a"> a. TCP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="b"> b. IP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="c"> c. NSF <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc2" value="d"> d. DNS <span class="badge"></span></label>
+        </div>
+        <!-- 3 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc3" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">3)</span>The ____, a widely used service on the Internet, consists of a worldwide collection of electronic documents.</div>
+          <label class="option"><input type="radio" name="mc3" value="a"> a. ARPA <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="c"> c. Web <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="b"> b. NSFNet <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc3" value="d"> d. VoIP <span class="badge"></span></label>
+        </div>
+        <!-- 4 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc4" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">4)</span>Each document on the Web, called a Web ____, can contain text, graphics, audio, and video.</div>
+          <label class="option"><input type="radio" name="mc4" value="a"> a. host <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="b"> b. net <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc4" value="d"> d. page <span class="badge"></span></label>
+        </div>
+        <!-- 5 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc5" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">5)</span>The purpose of a(n) ______ Web site is to promote or sell a product or service.</div>
+          <label class="option"><input type="radio" name="mc5" value="a"> a. entertainment <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="b"> b. business/marketing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="c"> c. advocacy <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc5" value="d"> d. informational <span class="badge"></span></label>
+        </div>
+        <!-- 6 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc6" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">6)</span>A(n) ___ Web site uses a diary or journal format to reflect the interests, opinions, and personalities of the author and sometimes site visitors.</div>
+          <label class="option"><input type="radio" name="mc6" value="a"> a. news <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="b"> b. blog <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="c"> c. advocacy <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc6" value="d"> d. business/marketing <span class="badge"></span></label>
+        </div>
+        <!-- 7 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc7" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">7)</span>Most _____ are open to modification by the general public.</div>
+          <label class="option"><input type="radio" name="mc7" value="a"> a. blogs <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="b"> b. content aggregators <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc7" value="d"> d. wikis <span class="badge"></span></label>
+        </div>
+        <!-- 8 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc8" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">8)</span>Many Web page addresses begin with _____, which stands for Hypertext Transfer Protocol.</div>
+          <label class="option"><input type="radio" name="mc8" value="a"> a. html:// <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="b"> b. http:// <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="c"> c. html:// <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc8" value="d"> d. Either A or C <span class="badge"></span></label>
+        </div>
+        <!-- 9 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc9" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">9)</span>A Web page may contain a(n) _____, which is a built-in connection to another Web page or part of a Web page.</div>
+          <label class="option"><input type="radio" name="mc9" value="a"> a. portal <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="b"> b. directory <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="c"> c. link <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc9" value="d"> d. index <span class="badge"></span></label>
+        </div>
+        <!-- 10 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc10" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">10)</span>On the Web, a subject ____ classifies Web pages into an organized set of categories and related subcategories.</div>
+          <label class="option"><input type="radio" name="mc10" value="a"> a. glossary <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="b"> b. dictionary <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="c"> c. directory <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc10" value="d"> d. roster <span class="badge"></span></label>
+        </div>
+        <!-- 11 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc11" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">11)</span>A ____ is a Web site that offers a variety of Internet services from a single, convenient location.</div>
+          <label class="option"><input type="radio" name="mc11" value="a"> a. portal <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="b"> b. blog <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="c"> c. wiki <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc11" value="d"> d. plug-in <span class="badge"></span></label>
+        </div>
+        <!-- 12 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc12" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">12)</span>A ____ is a collaborative Web site that allows users to add to, modify, or delete the Web site content via their Web browser.</div>
+          <label class="option"><input type="radio" name="mc12" value="a"> a. portal <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="b"> b. wiki <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="c"> c. blog <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc12" value="d"> d. content aggregator <span class="badge"></span></label>
+        </div>
+        <!-- 13 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc13" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">13)</span>A content ____ is a business that gathers and organizes Web content and then distributes the content to subscribers.</div>
+          <label class="option"><input type="radio" name="mc13" value="a"> a. collector <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="b"> b. navigator <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="c"> c. aggregator <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc13" value="d"> d. browser <span class="badge"></span></label>
+        </div>
+        <!-- 14 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc14" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">14)</span>The term ______ refers to any application that combines text with graphics, animation, audio, video, and/or virtual reality.</div>
+          <label class="option"><input type="radio" name="mc14" value="a"> a. portal <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="b"> b. Web app <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="c"> c. multimedia <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc14" value="d"> d. Java applet <span class="badge"></span></label>
+        </div>
+        <!-- 15 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc15" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">15)</span>A(n) ______ is a digital representation of nontext information such as a drawing, chart, or photograph.</div>
+          <label class="option"><input type="radio" name="mc15" value="a"> a. applet <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="b"> b. pic <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc15" value="d"> d. graphic <span class="badge"></span></label>
+        </div>
+        <!-- 16 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc16" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">16)</span>If any of the images could be clicked to display a larger version of the image, they would be ______ images.</div>
+          <label class="option"><input type="radio" name="mc16" value="a"> a. keyframe <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="b"> b. thumbnail <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="c"> c. applet <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc16" value="d"> d. extraction <span class="badge"></span></label>
+        </div>
+        <!-- 17 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc17" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">17)</span>Many Web pages use ______, which is the appearance of motion created by displaying a series of still images in sequence.</div>
+          <label class="option"><input type="radio" name="mc17" value="a"> a. multimedia <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="c"> c. animation <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="b"> b. keyframes <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc17" value="d"> d. keystoning <span class="badge"></span></label>
+        </div>
+        <!-- 18 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc18" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">18)</span>On the Web, sites can make use of _____, which includes music, speech, or any other sound.</div>
+          <label class="option"><input type="radio" name="mc18" value="a"> a. vodcasting <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="b"> b. audio <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="c"> c. video <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc18" value="d"> d. digeo <span class="badge"></span></label>
+        </div>
+        <!-- 19 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc19" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">19)</span>The more common usage of the term, ____ page, refers to the first page that a Web site displays.</div>
+          <label class="option"><input type="radio" name="mc19" value="a"> a. locator <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="b"> b. search <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="c"> c. home <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc19" value="d"> d. host <span class="badge"></span></label>
+        </div>
+        <!-- 20 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc20" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">20)</span>MP3 format ____ much of the original quality of the sound.</div>
+          <label class="option"><input type="radio" name="mc20" value="a"> a. increases size 10x, and destroys <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="b"> b. increases size 10x, but preserves <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="c"> c. reduces to ~1/10 size, and preserves <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc20" value="d"> d. reduces to ~1/10 size, but destroys <span class="badge"></span></label>
+        </div>
+        <!-- 21 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc21" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">21)</span>To listen to an audio file on your computer, you need special software called a ____.</div>
+          <label class="option"><input type="radio" name="mc21" value="a"> a. host <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="b"> b. receiver <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc21" value="d"> d. player <span class="badge"></span></label>
+        </div>
+        <!-- 22 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc22" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">22)</span>____ is the process of transferring data in a continuous and even flow.</div>
+          <label class="option"><input type="radio" name="mc22" value="a"> a. Uploading <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="b"> b. Flowing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc22" value="d"> d. Streaming <span class="badge"></span></label>
+        </div>
+        <!-- 23 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc23" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">23)</span>____ consists of full-motion images that are played back at various speeds.</div>
+          <label class="option"><input type="radio" name="mc23" value="a"> a. Audio <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="c"> c. Video <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="b"> b. Vodcasting <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc23" value="d"> d. Digeo <span class="badge"></span></label>
+        </div>
+        <!-- 24 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc24" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">24)</span>____ is the use of computers to simulate a real or imagined environment that appears as a three-dimensional (3-D) space.</div>
+          <label class="option"><input type="radio" name="mc24" value="a"> a. CAD <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="b"> b. CMOS <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc24" value="d"> d. VR <span class="badge"></span></label>
+        </div>
+        <!-- 25 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc25" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">25)</span>A(n) ____ is a program that extends the capability of a browser.</div>
+          <label class="option"><input type="radio" name="mc25" value="a"> a. plug-in <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="b"> b. IrDA <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="c"> c. chat client <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc25" value="d"> d. VoIP <span class="badge"></span></label>
+        </div>
+        <!-- 26 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc26" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">26)</span>Web publishing involves ____.</div>
+          <label class="option"><input type="radio" name="mc26" value="a"> a. planning and maintaining the Web site <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="b"> b. analyzing and designing the Web site <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="c"> c. creating and deploying the Web site <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc26" value="d"> d. all of the above <span class="badge"></span></label>
+        </div>
+        <!-- 27 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc27" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">27)</span>A customer visits an online business through its ____, which contains product descriptions, graphics, and a shopping cart.</div>
+          <label class="option"><input type="radio" name="mc27" value="a"> a. electronic storefront <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="b"> b. data warehouse <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="c"> c. online auction <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc27" value="d"> d. chat room <span class="badge"></span></label>
+        </div>
+        <!-- 28 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc28" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">28)</span>____ is a business transaction that occurs over an electronic network such as the Internet.</div>
+          <label class="option"><input type="radio" name="mc28" value="a"> a. e-convergence <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="b"> b. e-browsing <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc28" value="d"> d. e-commerce <span class="badge"></span></label>
+        </div>
+        <!-- 29 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc29" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">29)</span>The figure illustrates e-retail, an example of e-commerce, most of which is ______ e-commerce.</div>
+          <label class="option"><input type="radio" name="mc29" value="a"> a. business-to-consumer (B2C) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="b"> b. consumer-to-business (C2B) <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc29" value="d"> d. business-to-business (B2B) <span class="badge"></span></label>
+        </div>
+        <!-- 30 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc30" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">30)</span>You use a(n) ______ program to create, send, receive, forward, store, print, and delete e-mail messages.</div>
+          <label class="option"><input type="radio" name="mc30" value="a"> a. FTP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="b"> b. e-mail <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="c"> c. transmission <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc30" value="d"> d. communication <span class="badge"></span></label>
+        </div>
+        <!-- 31 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc31" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">31)</span>_____, which is the transmission of messages and files via a computer network, is a primary communications method.</div>
+          <label class="option"><input type="radio" name="mc31" value="a"> a. E-mail <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="b"> b. FTP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="c"> c. Mailing list <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc31" value="d"> d. Chat room <span class="badge"></span></label>
+        </div>
+        <!-- 32 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc32" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">32)</span>An e-mail ______ is a combination of a user name and domain name that identifies a user.</div>
+          <label class="option"><input type="radio" name="mc32" value="a"> a. link <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="b"> b. address <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="c"> c. reference <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc32" value="d"> d. user clause <span class="badge"></span></label>
+        </div>
+        <!-- 33 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc33" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">33)</span>In an e-mail address, the ______ is a unique combination of characters that identifies a specific user.</div>
+          <label class="option"><input type="radio" name="mc33" value="a"> a. domain name <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="b"> b. address book <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="c"> c. user name <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc33" value="d"> d. subject directory <span class="badge"></span></label>
+        </div>
+        <!-- 34 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc34" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">34)</span>A ______ is a real-time typed conversation that takes place on a computer.</div>
+          <label class="option"><input type="radio" name="mc34" value="a"> a. confab <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="b"> b. chat <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="c"> c. URL <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc34" value="d"> d. VoIP <span class="badge"></span></label>
+        </div>
+        <!-- 35 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc35" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">35)</span>______ enables users to speak to other users over the Internet (instead of the public switched telephone network).</div>
+          <label class="option"><input type="radio" name="mc35" value="a"> a. IrDA <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="b"> b. CAD <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="c"> c. VoIP <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc35" value="d"> d. POST <span class="badge"></span></label>
+        </div>
+        <!-- 36 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc36" data-answer="d" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">36)</span>A popular Web-based type of discussion group that does not require a newsreader is a(n) ______.</div>
+          <label class="option"><input type="radio" name="mc36" value="a"> a. online index <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="b"> b. blog reader <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc36" value="d"> d. message board <span class="badge"></span></label>
+        </div>
+        <!-- 37 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc37" data-answer="a" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">37)</span>______ is the code of acceptable behavior users should follow while on the Internet.</div>
+          <label class="option"><input type="radio" name="mc37" value="a"> a. Netiquette <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="b"> b. Web politesse <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="c"> c. Internet behavior <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc37" value="d"> d. Web civility <span class="badge"></span></label>
+        </div>
+        <!-- 38 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc38" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">38)</span>In e-mail, newsgroups, and chat rooms, use _____, such as :) and :(, to express emotion.</div>
+          <label class="option"><input type="radio" name="mc38" value="a"> a. icons <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="b"> b. OSPs <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="c"> c. emoticons <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc38" value="d"> d. spam <span class="badge"></span></label>
+        </div>
+        <!-- 39 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc39" data-answer="b" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">39)</span>A Web ____ is a collection of related Web pages and associated items stored on a Web server.</div>
+          <label class="option"><input type="radio" name="mc39" value="a"> a. reader <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="b"> b. site <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="c"> c. host <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc39" value="d"> d. app <span class="badge"></span></label>
+        </div>
+        <!-- 40 -->
+        <div class="card question-card" data-type="mcq" data-qid="mc40" data-answer="c" data-aos="fade-up">
+          <div class="q-text"><span class="q-num">40)</span>A ____ is application software that allows users to access and view Web pages.</div>
+          <label class="option"><input type="radio" name="mc40" value="a"> a. reader <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="b"> b. host <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="c"> c. browser <span class="badge"></span></label>
+          <label class="option"><input type="radio" name="mc40" value="d"> d. server <span class="badge"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <section id="tf" aria-labelledby="tf-title">
+      <div class="section-title">
+        <h2 id="tf-title">أسئلة الصح والخطأ (25 سؤال)</h2>
+        <span class="muted">اختر (T) صح أو (F) خطأ</span>
+      </div>
+      <div class="grid">
+        <!-- ============ 25 T/F ============ -->
+        <div class="card question-card" data-type="tf" data-qid="tf1"  data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">1)</span>No single person, company, institution, or government agency controls or owns the Internet.</div><label class="option"><input type="radio" name="tf1" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf1" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf2"  data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">2)</span>A dial-up Internet connection is high-speed technology.</div><label class="option"><input type="radio" name="tf2" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf2" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf3"  data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">3)</span>An ISP (Internet service provider) is a regional or national access provider.</div><label class="option"><input type="radio" name="tf3" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf3" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf4"  data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">4)</span>National ISPs usually offer fewer services and have a smaller technical support staff than regional ISPs.</div><label class="option"><input type="radio" name="tf4" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf4" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf5"  data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">5)</span>An IP address usually consists of four groups of numbers, each separated by a comma.</div><label class="option"><input type="radio" name="tf5" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf5" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf6"  data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">6)</span>To browse the Web, you need a computer connected to the Internet and that has a Web browser.</div><label class="option"><input type="radio" name="tf6" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf6" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf7"  data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">7)</span>All current browsers and Web sites require the http:// and www portions of a Web address.</div><label class="option"><input type="radio" name="tf7" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf7" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf8"  data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">8)</span>Text links may be underlined and/or displayed in a different size from the other text on a Web page.</div><label class="option"><input type="radio" name="tf8" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf8" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf9"  data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">9)</span>Many current Web browsers support tabbed browsing.</div><label class="option"><input type="radio" name="tf9" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf9" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf10" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">10)</span>An entertainment Web site contains factual information.</div><label class="option"><input type="radio" name="tf10" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf10" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf11" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">11)</span>Most Web pages include only formatted text and links.</div><label class="option"><input type="radio" name="tf11" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf11" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf12" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">12)</span>It is legal to download copyrighted music even without permission.</div><label class="option"><input type="radio" name="tf12" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf12" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf13" data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">13)</span>The MPEG group defines a popular video compression standard, currently MPEG-4.</div><label class="option"><input type="radio" name="tf13" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf13" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf14" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">14)</span>To develop a Web page, you must be a computer programmer.</div><label class="option"><input type="radio" name="tf14" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf14" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf15" data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">15)</span>The first step in Web publishing is to plan a Web site.</div><label class="option"><input type="radio" name="tf15" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf15" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf16" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">16)</span>B2C e-commerce occurs when one consumer sells directly to another.</div><label class="option"><input type="radio" name="tf16" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf16" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf17" data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">17)</span>Like postal mail, you must address an e-mail message with the recipient’s e-mail address.</div><label class="option"><input type="radio" name="tf17" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf17" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf18" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">18)</span>To add your e-mail name and address to a mailing list, you unsubscribe from it.</div><label class="option"><input type="radio" name="tf18" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf18" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf19" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">19)</span>Real time means that you and the people with whom you are conversing must be online at different times.</div><label class="option"><input type="radio" name="tf19" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf19" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf20" data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">20)</span>All IM programs do not necessarily follow the same IM standards.</div><label class="option"><input type="radio" name="tf20" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf20" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf21" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">21)</span>All FTP sites restrict file transfers to those who have authorized accounts.</div><label class="option"><input type="radio" name="tf21" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf21" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf22" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">22)</span>Most Web sites use newsgroups instead of message boards because they are easier to use.</div><label class="option"><input type="radio" name="tf22" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf22" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf23" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">23)</span>Podcasters register their podcasts with wikis.</div><label class="option"><input type="radio" name="tf23" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf23" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf24" data-answer="F" data-aos="fade-up"><div class="q-text"><span class="q-num">24)</span>Video files seldom are compressed because they are quite small in size.</div><label class="option"><input type="radio" name="tf24" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf24" value="F"> خطأ (F) <span class="badge"></span></label></div>
+        <div class="card question-card" data-type="tf" data-qid="tf25" data-answer="T" data-aos="fade-up"><div class="q-text"><span class="q-num">25)</span>A rule of netiquette is to read the FAQ (frequently asked questions), if one exists.</div><label class="option"><input type="radio" name="tf25" value="T"> صح (T) <span class="badge"></span></label><label class="option"><input type="radio" name="tf25" value="F"> خطأ (F) <span class="badge"></span></label></div>
+      </div>
+
+      <div class="actions" style="margin-top:18px">
+        <button class="btn" onclick="gradeAll()">عرض النتيجة</button>
+        <button class="btn secondary" onclick="resetQuiz()">مسح الاختيارات</button>
+      </div>
+    </section>
+
+    <section id="resultBox" aria-labelledby="res-title">
+      <div class="card" data-aos="fade-up">
+        <div class="section-title">
+          <h2 id="res-title">نتيجتك</h2>
+          <span class="muted">تفاصيل الدرجات بعد التصحيح</span>
+        </div>
+        <div class="results" id="results">
+          <div class="score" id="scoreLine">—</div>
+          <div class="muted" id="detailLine" style="margin-top:6px">—</div>
+          <div class="muted" id="tipLine" style="margin-top:6px">الأسئلة غير المُجابة تظهر بإطار أصفر.</div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn" onclick="scrollToTop()">العودة للأعلى</button>
+            <button class="btn secondary" onclick="resetQuiz()">إعادة المحاولة</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div>© Chapter 2 Quiz</div>
+    <div class="made">صُنعت بالحب بواسطة جيمي 💙</div>
+  </footer>
+
+  <!-- AOS + App JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 500, easing: 'ease-out' });
+
+    const drawer = document.getElementById('drawer');
+    const burger = document.querySelector('.hamburger');
+    function toggleDrawer(forceState){
+      const willOpen = (typeof forceState==='boolean') ? forceState : !drawer.classList.contains('open');
+      drawer.classList.toggle('open', willOpen);
+      burger.setAttribute('aria-expanded', String(willOpen));
+      drawer.setAttribute('aria-hidden', String(!willOpen));
+    }
+    burger.addEventListener('click', () => toggleDrawer());
+
+    function clearColors(card){
+      card.classList.remove('unanswered');
+      card.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('correct','incorrect');
+        const badge = opt.querySelector('.badge'); if (badge) badge.textContent = '';
+      });
+    }
+
+    function gradeSection(selector){
+      const cards = Array.from(document.querySelectorAll(selector));
+      let total = cards.length, correct = 0, unanswered = 0;
+      cards.forEach(card => {
+        clearColors(card);
+        const answer = card.dataset.answer;
+        const chosen = card.querySelector('input[type="radio"]:checked');
+        if(!chosen){
+          unanswered++;
+          card.classList.add('unanswered');
+          const corrLabel = card.querySelector('input[value="'+answer+'"]')?.closest('.option');
+          if(corrLabel){ corrLabel.classList.add('correct'); corrLabel.querySelector('.badge').textContent = '✓'; }
+          return;
+        }
+        const chosenVal = chosen.value;
+        const chosenLabel = chosen.closest('.option');
+        const correctLabel = card.querySelector('input[value="'+answer+'"]')?.closest('.option');
+        if(chosenVal === answer){
+          correct++;
+          chosenLabel.classList.add('correct');
+          chosenLabel.querySelector('.badge').textContent = '✓';
+        }else{
+          chosenLabel.classList.add('incorrect');
+          chosenLabel.querySelector('.badge').textContent = '✗';
+          if(correctLabel){ correctLabel.classList.add('correct'); correctLabel.querySelector('.badge').textContent = '✓'; }
+        }
+      });
+      return {total, correct, unanswered, wrong: total - correct - unanswered};
+    }
+
+    function gradeAll(){
+      const r1 = gradeSection('#mcq .question-card');
+      const r2 = gradeSection('#tf .question-card');
+      const totalQ = r1.total + r2.total;
+      const correct = r1.correct + r2.correct;
+      const unanswered = r1.unanswered + r2.unanswered;
+      const wrong = totalQ - correct - unanswered;
+      const percent = Math.round((correct/totalQ)*100);
+
+      const results = document.getElementById('results');
+      const scoreLine = document.getElementById('scoreLine');
+      const detailLine = document.getElementById('detailLine');
+      scoreLine.textContent = `الدرجة الكلية: ${correct} / ${totalQ} (${percent}%)`;
+      detailLine.textContent = `اختياري: ${r1.correct}/${r1.total} — صح/خطأ: ${r2.correct}/${r2.total} — أخطاء: ${wrong} — غير مُجاب: ${unanswered}`;
+      results.classList.add('show');
+      document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+    }
+
+    function resetQuiz(){
+      document.querySelectorAll('.question-card').forEach(card => {
+        clearColors(card);
+        card.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      });
+      document.getElementById('results').classList.remove('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+  </script>
+</body>
+</html>
+```
+
+لو عايز أطلعهولك بنفس اسم الملف الأول (`intro_to_cs_ch1.html`) مع نفس الثيم بالظبط، قلّي وهنسميه اللي يعجبك.
